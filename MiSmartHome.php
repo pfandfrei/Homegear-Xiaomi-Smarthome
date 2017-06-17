@@ -1,6 +1,16 @@
 <?php
+/*
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ */
+
+
 $basedir = __DIR__.'/../../';
-include $basedir.'lib/Homegear/Homegear.php';
+if (file_exists($basedir.'lib/Homegear/'))
+{
+    include $basedir.'lib/Homegear/Homegear.php';
+}
+
 include_once 'MiConstants.php';
 include_once 'MiCentral.php';
 class SharedData extends Threaded
@@ -92,13 +102,21 @@ $scriptId = $hg->getScriptId();
 
 $central = new MiCentral();
 $sharedData = new SharedData($scriptId, $peerId);
-// create a socket to communicate with gateway
-$sharedData->socket_recv = $central->createSocket();  
 // discover all gateways and devices
 $sharedData->gateways = $central->discover();
-// handle homegear events
-$thread = new EventThread($sharedData);
-$thread->start();
-// handle gateway communication
-$central->run();
-$thread->join();
+if ($peerId > 0)
+{
+    // create a socket to communicate with gateway
+    $sharedData->socket_recv = $central->createSocket();  
+    // handle homegear events
+    $thread = new EventThread($sharedData);
+    $thread->start();
+    // handle gateway communication
+    $central->run();
+    $thread->join();
+    socket_close($sharedData->socket_recv);
+}
+else
+{
+    echo "\r\nInstallation completed!\r\n";
+}
