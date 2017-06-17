@@ -1,7 +1,17 @@
 <?php
+/*
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ */
+
+
 include_once 'MiConstants.php';
 include_once 'MiSensorHT.php';
 include_once 'MiSwitch.php';
+include_once 'MiCube.php';
+include_once 'MiMotion.php';
+include_once 'MiMagnet.php';
+
 
 class StackableArray extends Threaded
 {
@@ -154,6 +164,15 @@ class MiGateway extends Threaded
                         break;
                     case MiConstants::MODEL_SENSOR_HT:
                         $this->_devices[$deviceid] = new MiSensorHT($data);
+                        break;
+                    case MiConstants::MODEL_CUBE:
+                        $this->_devices[$deviceid] = new MiCube($data);
+                        break;
+                    case MiConstants::MODEL_MAGNET:
+                        $this->_devices[$deviceid] = new MiMagnet($data);
+                        break;
+                    case MiConstants::MODEL_MOTION:
+                        $this->_devices[$deviceid] = new MiMotion($data);
                         break;
                 }
             }
@@ -341,10 +360,13 @@ class MiGateway extends Threaded
     
     public function updateDevice($hg, $sid, $data)
     {
+        $success = FALSE;
         if (array_key_exists($sid, $this->_devices))
         {
             $this->_devices[$sid]->updateData($hg, $data);
+            $success = TRUE;
         }
+        return $success;
     }
 
     public function calcRGBH($brightness, $rgb)
