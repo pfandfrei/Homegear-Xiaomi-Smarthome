@@ -1,4 +1,10 @@
 <?php
+/*
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ */
+
+
 include_once 'MiConstants.php';
 
 class MiMotion extends MiBaseDevice
@@ -16,6 +22,16 @@ class MiMotion extends MiBaseDevice
     public function updateData($hg, $data)
     {
         parent::updateData($hg, $data);
+        
+        if (property_exists($data, 'status'))
+        {
+            switch ($data->status)
+            {
+                case 'motion':
+                    $hg->setValue($this->_peerId, 1, 'MOTION', TRUE);
+                    break;
+            }
+        }
     }
     
     public function updateEvent($hg, $event)

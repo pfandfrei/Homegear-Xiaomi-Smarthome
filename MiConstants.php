@@ -1,4 +1,9 @@
 <?php
+/*
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ */
+
 
 class MiConstants
 {
@@ -23,6 +28,7 @@ class MiConstants
     const REPORT            = 'report';
     
     const MODEL_GATEWAY     = 'gateway';
+    const MODEL_CUBE        = 'cube';
     const MODEL_MAGNET      = 'magnet';
     const MODEL_MOTION      = 'motion';
     const MODEL_SWITCH      = 'switch';

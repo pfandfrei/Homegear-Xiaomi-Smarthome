@@ -1,3 +1,7 @@
+<!--
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ *-->
 <homegearDevice version="1">
     <supportedDevices>
         <device id="MiMagnet">
@@ -70,21 +74,6 @@
             </parameter>
         </variables>
         <variables id="custom_ch1_action">
-            <parameter id="STATE">
-                <properties>
-                    <writeable>true</writeable>
-                    <addonWriteable>true</addonWriteable>
-                    <unit></unit>
-                    <casts>
-                        <rpcBinary/>
-                    </casts>
-                </properties>
-                <logicalInteger>
-                </logicalInteger>
-                <physicalInteger>
-                    <operationType>store</operationType>
-                </physicalInteger>
-            </parameter>
             <parameter id="STATE">
                 <properties>
                     <writeable>true</writeable>

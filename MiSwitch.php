@@ -1,4 +1,10 @@
 <?php
+/*
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ */
+
+
 include_once 'MiConstants.php';
 
 class MiSwitch extends MiBaseDevice

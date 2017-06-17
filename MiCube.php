@@ -1,7 +1,13 @@
 <?php
+/*
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ */
+
+
 include_once 'MiConstants.php';
 
-class MiSwitch extends MiBaseDevice
+class MiCube extends MiBaseDevice
 {
     const TYPE_ID = 0x287c;
     
