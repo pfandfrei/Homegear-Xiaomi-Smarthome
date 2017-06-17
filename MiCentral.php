@@ -1,7 +1,22 @@
 <?php
+/*
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ */
+
+
 $basedir = __DIR__.'/../../';
-include $basedir.'lib/Homegear/Homegear.php';
-include $basedir.'lib/Homegear/Constants.php';
+if (file_exists($basedir.'lib/Homegear/'))
+{
+    include $basedir.'lib/Homegear/Homegear.php';
+    include $basedir.'lib/Homegear/Constants.php';
+    
+    define('FILTER_SERIAL', \Homegear\Constants\GetPeerId::Filter_Serial); 
+}
+else
+{
+    define('FILTER_SERIAL', 1); 
+}
 
 include_once 'MiConstants.php';
 include_once 'MiGateway.php';
@@ -68,44 +83,41 @@ class MiCentral extends Threaded
     
     public function createDevices($hg, $gateway)
     {            
-        //foreach ($this->_gateways as $gateway)
+        // create gateway device
+        list($address, $serial) = $this->encodeSid($gateway->getSid());
+        $peerdIds = $hg->getPeerId(FILTER_SERIAL, $serial);
+        if (0 == count($peerdIds))
         {
-            // create gateway device
-            list($address, $serial) = $this->encodeSid($gateway->getSid());
-            $peerdIds = $hg->getPeerId(\Homegear\Constants\GetPeerId::Filter_Serial, $serial);
-            if (0 == count($peerdIds))
-            {
-                $peerId = $hg->createDevice(MiCentral::FAMILY_ID, MiGateway::TYPE_ID, $serial, intval($address), /*protoversion*/0x0107);
-                $hg->putParamset($peerId, 0, ['SID'=> $gateway->getSid(), 'IP' => $gateway->getIpAddress(), 'PORT' => 9898]);
-                $gateway->setPeerId($peerId);
-            }
-            else
-            {
-                $gateway->setPeerId($peerdIds[0]); 
-                $gateway->getParamset($hg, 0);            
-            }
+            $peerId = $hg->createDevice(MiCentral::FAMILY_ID, MiGateway::TYPE_ID, $serial, intval($address), /*protoversion*/0x0107);
+            $hg->putParamset($peerId, 0, ['SID'=> $gateway->getSid(), 'IP' => $gateway->getIpAddress(), 'PORT' => 9898]);
+            $gateway->setPeerId($peerId);
+        }
+        else
+        {
+            $gateway->setPeerId($peerdIds[0]); 
+            $gateway->getParamset($hg, 0);            
+        }
 
-            foreach ($gateway->getDevicelist() as $sid)
+        foreach ($gateway->getDevicelist() as $sid)
+        {
+            if ($device = $gateway->getDevice($sid))
             {
-                if ($device = $gateway->getDevice($sid))
+                list($address, $serial) = $this->encodeSid($sid);
+                $peerdIds = $hg->getPeerId(FILTER_SERIAL, $serial);
+                if (0 == count($peerdIds))
                 {
-                    list($address, $serial) = $this->encodeSid($sid);
-                    $peerdIds = $hg->getPeerId(\Homegear\Constants\GetPeerId::Filter_Serial, $serial);
-                    if (0 == count($peerdIds))
-                    {
-                        $peerId = $hg->createDevice(MiCentral::FAMILY_ID, $device->getTypeId(), $serial, intval($address), /*protoversion*/0x0107);
-                        $hg->putParamset($peerId, 0, ['SID' => $sid]);
-                        $device->setPeerId($peerId);
-                    }
-                    else
-                    {
-                        $device->setPeerId($peerdIds[0]);             
-                    }
+                    $peerId = $hg->createDevice(MiCentral::FAMILY_ID, $device->getTypeId(), $serial, intval($address), /*protoversion*/0x0107);
+                    $hg->putParamset($peerId, 0, ['SID' => $sid]);
+                    $device->setPeerId($peerId);
                 }
-            }  
-            
-            $gateway->getDeviceData($hg);
+                else
+                {
+                    $device->setPeerId($peerdIds[0]);             
+                }
+            }
         }  
+
+        $gateway->getDeviceData($hg);
     }
            
     
@@ -177,6 +189,7 @@ class MiCentral extends Threaded
                                 {
                                     if ($gateway->getSid()==$response->sid)
                                     {
+                                        $gateway->debug_log($json);
                                         $gateway->updateData($hg, $response);
                                     }
                                 }
