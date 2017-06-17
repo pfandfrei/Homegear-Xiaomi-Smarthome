@@ -1,0 +1,106 @@
+<!--
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ *-->
+<homegearDevice version="1">
+    <supportedDevices>
+        <device id="MiMagnet">
+            <description>Xiaomi Smart Home Door Sensor - homegear interface</description>
+            <typeNumber>0x287a</typeNumber>
+        </device>
+    </supportedDevices>
+    <runProgram>
+    </runProgram>
+    <properties/>
+    <functions>
+        <function channel="0" type="SETTINGS" channelCount="1">
+            <properties/>
+            <configParameters>custom_ch0_master</configParameters>
+	    <variables>custom_ch0_values</variables>
+        </function>
+        <function channel="1" type="STATUS" channelCount="1">
+            <properties/>
+            <configParameters>config</configParameters>
+            <variables>custom_ch1_action</variables>
+        </function>
+    </functions>
+    <packets/>
+    <parameterGroups>
+        <configParameters id="config"/>
+        <configParameters id="custom_ch0_master">
+            <parameter id="SID">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalString>
+                    <defaultValue></defaultValue>
+                </logicalString>
+                <physicalString>
+                    <operationType>config</operationType>
+                </physicalString>
+            </parameter>
+            <parameter id="HEARTBEAT">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalDecimal/>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter> 
+        </configParameters>
+        <variables id="custom_ch0_values">
+            <parameter id="VOLTAGE">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit>mV</unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalDecimal/>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+        </variables>
+        <variables id="custom_ch1_action">
+            <parameter id="STATE">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalEnumeration>
+                    <value>
+                        <id>UNKNOWN</id>
+                        <index>0</index>
+                    </value>
+                    <value>
+                        <id>CLOSED</id>
+                        <index>1</index>
+                    </value>
+                    <value>
+                        <id>OPEN</id>
+                        <index>2</index>
+                    </value>
+                </logicalEnumeration>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+        </variables>
+    </parameterGroups>
+</homegearDevice>
+

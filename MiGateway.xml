@@ -1,0 +1,394 @@
+<!--
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ *-->
+<homegearDevice version="1">
+    <supportedDevices>
+        <device id="MiCentral">
+            <description>Xiaomi Smart Home Gateway - homegear interface</description>
+            <typeNumber>0x286c</typeNumber>
+        </device>
+    </supportedDevices>
+    <runProgram>
+        <startType>permanent</startType>
+		<script>
+<![CDATA[<?php
+include '/var/lib/homegear/scripts/DeviceScripts/Xiaomi/MiSmartHome.php';
+?>]]>
+		</script>
+    </runProgram>
+    <properties/>
+    <functions>
+        <function channel="0" type="SETTINGS" channelCount="1">
+            <properties/>
+            <configParameters>custom_ch0_master</configParameters>
+        </function>
+        <function channel="1" type="LIGHT" channelCount="1">
+            <properties/>
+            <configParameters>config</configParameters>
+            <variables>custom_ch1_light</variables>
+        </function>
+        <function channel="2" type="SOUND" channelCount="1">
+            <properties/>
+            <configParameters>config</configParameters>
+            <variables>custom_ch2_sound</variables>
+        </function>
+        <function channel="3" type="RADIO" channelCount="1">
+            <properties/>
+            <configParameters>config</configParameters>
+            <variables>custom_ch3_radio</variables>
+        </function>
+    </functions>
+    <packets/>
+    <parameterGroups>
+        <configParameters id="config"/>
+        <configParameters id="custom_ch0_master">
+            <parameter id="SID">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalString>
+                    <defaultValue></defaultValue>
+                </logicalString>
+                <physicalString>
+                    <operationType>config</operationType>
+                </physicalString>
+            </parameter>
+            <parameter id="HEARTBEAT">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalDecimal/>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+            <parameter id="IP_ADDRESS">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalString>
+                    <defaultValue></defaultValue>
+                </logicalString>
+                <physicalString>
+                    <operationType>config</operationType>
+                </physicalString>
+            </parameter>
+            <parameter id="PORT">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                    <minimumValue>1</minimumValue>
+                    <maximumValue>65535</maximumValue>
+                    <defaultValue>9898</defaultValue>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>config</operationType>
+                </physicalInteger>
+            </parameter>   
+            <parameter id="PROTO_VERSION">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalString>
+                    <defaultValue></defaultValue>
+                </logicalString>
+                <physicalString>
+                    <operationType>config</operationType>
+                </physicalString>
+            </parameter>    
+            <parameter id="PASSWORD">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalString>
+                    <defaultValue></defaultValue>
+                </logicalString>
+                <physicalString>
+                    <operationType>config</operationType>
+                </physicalString>
+            </parameter>    
+            <parameter id="DEBUG_LEVEL">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                    <minimumValue>0</minimumValue>
+                    <maximumValue>5</maximumValue>
+                    <defaultValue>0</defaultValue>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>config</operationType>
+                </physicalInteger>
+            </parameter>   
+        </configParameters>
+        <variables id="custom_ch1_light">
+            <parameter id="ILLUMINATION">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                    <minimumValue>300</minimumValue>
+                    <maximumValue>1300</maximumValue>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+            <parameter id="RGB">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                    <minimumValue>0</minimumValue>
+                    <maximumValue>16777215</maximumValue>
+                    <defaultValue>0</defaultValue>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+            <parameter id="BRIGHTNESS">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit>%</unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                    <minimumValue>0</minimumValue>
+                    <maximumValue>100</maximumValue>
+                    <defaultValue>0</defaultValue>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+            <parameter id="ENABLE">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalBoolean/>
+                <physicalBoolean>
+                    <operationType>store</operationType>
+                </physicalBoolean>
+            </parameter>
+            <parameter id="RGB_OLD">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                    <minimumValue>0</minimumValue>
+                    <maximumValue>1694498815</maximumValue>
+                    <defaultValue>0</defaultValue>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+        </variables>
+        <variables id="custom_ch2_sound">
+            <parameter id="MUSIC_ID">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalEnumeration>
+                    <value>
+                        <id>Police siren</id>
+                        <index>0</index>
+                    </value>
+                    <value>
+                        <id>Police siren 2</id>
+                        <index>1</index>
+                    </value>
+                    <value>
+                        <id>Accident tone</id>
+                        <index>2</index>
+                    </value>
+                    <value>
+                        <id>Missle countdown</id>
+                        <index>3</index>
+                    </value>
+                    <value>
+                        <id>Ghost</id>
+                        <index>4</index>
+                    </value>
+                    <value>
+                        <id>Sniper</id>
+                        <index>5</index>
+                    </value>
+                    <value>
+                        <id>War</id>
+                        <index>6</index>
+                    </value>
+                    <value>
+                        <id>Air Strike</id>
+                        <index>7</index>
+                    </value>
+                    <value>
+                        <id>Barking dogs</id>
+                        <index>8</index>
+                    </value>
+                    <value>
+                        <id>Doorbell ring tone</id>
+                        <index>10</index>
+                    </value>
+                    <value>
+                        <id>Knock on door</id>
+                        <index>11</index>
+                    </value>
+                    <value>
+                        <id>Hilarious</id>
+                        <index>12</index>
+                    </value>
+                    <value>
+                        <id>Alarm clock</id>
+                        <index>13</index>
+                    </value>
+                    <value>
+                        <id>MiMix</id>
+                        <index>20</index>
+                    </value>
+                    <value>
+                        <id>Enthusiastic</id>
+                        <index>21</index>
+                    </value>
+                    <value>
+                        <id>GuitarClassic</id>
+                        <index>22</index>
+                    </value>
+                    <value>
+                        <id>IceWorldPiano</id>
+                        <index>23</index>
+                    </value>
+                    <value>
+                        <id>LeisureTime</id>
+                        <index>24</index>
+                    </value>
+                    <value>
+                        <id>Childhood</id>
+                        <index>25</index>
+                    </value>
+                    <value>
+                        <id>MorningStreamlet</id>
+                        <index>26</index>
+                    </value>
+                    <value>
+                        <id>MusicBox</id>
+                        <index>27</index>
+                    </value>
+                    <value>
+                        <id>Orange</id>
+                        <index>28</index>
+                    </value>
+                    <value>
+                        <id>Thinker</id>
+                        <index>29</index>
+                    </value>
+                </logicalEnumeration>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+            <parameter id="VOLUME">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                    <minimumValue>0</minimumValue>
+                    <maximumValue>100</maximumValue>
+                    <defaultValue>0</defaultValue>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>    
+            <parameter id="PLAY">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalBoolean/>
+                <physicalBoolean>
+                    <operationType>store</operationType>
+                </physicalBoolean>
+            </parameter>
+            <parameter id="MUSIC_ID_OLD">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger>
+                </logicalInteger>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>         
+        </variables>
+        <variables id="custom_ch3_radio">
+        </variables>
+    </parameterGroups>
+</homegearDevice>
