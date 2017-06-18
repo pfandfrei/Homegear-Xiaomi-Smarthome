@@ -21,6 +21,7 @@ class StackableArray extends Threaded
 class MiGateway extends Threaded
 {
     const TYPE_ID = 0x286c;
+    const HEARTBEAT_TIMEOUT = 10;
     
     const IV = "\x17\x99\x6d\x09\x3d\x28\xdd\xb3\xba\x69\x5a\x2e\x6f\x58\x56\x2e";
 
@@ -181,15 +182,20 @@ class MiGateway extends Threaded
 
     public function getDeviceData($hg)
     {
-        if (FALSE !== ($deviceinfo = $this->readDevice($this->_sid)))
+        if (FALSE !== ($response = $this->readDevice($this->_sid)))
         {
-            $this->updateData($hg, $deviceinfo);
+            $this->updateData($hg, $response);
+            $data = json_decode($response->data);
+            if (property_exists($data, 'proto_version'))
+            {
+                $this->setProtoVersion($hg, $data->proto_version);
+            }
         }
 
         foreach ($this->_devicelist as $deviceid)
         {
-            $deviceinfo = $this->readDevice($deviceid);
-            $data = json_decode($deviceinfo->data);
+            $response = $this->readDevice($deviceid);
+            $data = json_decode($response->data);
             $this->_devices[$deviceid]->updateData($hg, $data);
         }
     }
@@ -311,10 +317,6 @@ class MiGateway extends Threaded
             $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->illumination); 
         }
         $this->setProperty($response, 'token');
-        if (property_exists($data, 'proto_version'))
-        {
-            $this->setProtoVersion($hg, $data->proto_version);
-        }
     }
     
     protected function setProperty($mixed, $property)
