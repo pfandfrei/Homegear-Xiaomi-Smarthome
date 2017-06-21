@@ -11,6 +11,10 @@ class MiMagnet extends MiBaseDevice
 {
     const TYPE_ID = 0x287a;
     
+    const STATE_UNKNOWN = 0;
+    const STATE_CLOSED = 1;
+    const STATE_OPEN = 2;
+    
     public function __construct($config)
     {
         $this->_model = MiConstants::MODEL_MAGNET;
@@ -28,13 +32,13 @@ class MiMagnet extends MiBaseDevice
             switch ($data->status)
             {
                 case 'unknown':
-                    $hg->setValue($this->_peerId, 1, 'STATE', 0);
+                    $hg->setValue($this->_peerId, 1, 'STATE', MiMagnet::STATE_UNKNOWN);
                     break;
                 case 'closed':
-                    $hg->setValue($this->_peerId, 1, 'STATE', 1);
+                    $hg->setValue($this->_peerId, 1, 'STATE', MiMagnet::STATE_CLOSED);
                     break;
                 case 'open':
-                    $hg->setValue($this->_peerId, 1, 'STATE', 2);
+                    $hg->setValue($this->_peerId, 1, 'STATE', MiMagnet::STATE_OPEN);
                     break;
             }
         }
