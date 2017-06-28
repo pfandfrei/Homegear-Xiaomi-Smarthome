@@ -10,6 +10,7 @@ abstract class MiBaseDevice extends Threaded
     public $_peerId;
     protected $_model;
     protected $_voltage;
+    protected $_heartbeat_timeout = 60 * 60;
     
     public function __construct($data)
     {
@@ -36,7 +37,13 @@ abstract class MiBaseDevice extends Threaded
     
     public function updateEvent($hg, $event)
     {
-        // nothing to do yet
+        $result = new stdClass();
+        $result->cmd = MiConstants::CMD_WRITE;
+        $result->model = $this->_model;
+        $result->sid = $this->_sid;
+        $result->short_id = 0;
+        $result->data = new stdClass();
+        return $result;
     }
     
     protected function setProperty($mixed, $property)
