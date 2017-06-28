@@ -5,32 +5,7 @@
  */
 
 abstract class MiBaseClass
-{
-    const MULTICAST_ADDRESS = '224.0.0.50';
-    const MULTICAST_PORT    = 9898;
-    const SERVER_PORT       = 4321;
-    const SOCKET_BUFSIZE    = 1024;
-    
-    const CMD_WHOIS         = '{"cmd":"whois"}';
-    const CMD_GET_ID_LIST   = '{"cmd":"get_id_list"}';
-    const READ_CMD          = '{"cmd":"read"}';
-    const CMD_WRITE         = '{"cmd":"write"}';
-
-    const ACK_IAM           = 'iam';
-    const ACK_GET_ID_LIST   = 'get_id_list_ack';
-    const ACK_READ          = 'read_ack';
-    const ACK_WRITE         = 'write_ack';
-    
-    const HEARTBEAT         = 'heartbeat';
-    const REPORT            = 'report';
-    
-    const MODEL_GATEWAY     = 'gateway';    // 0x286c
-    const MODEL_MAGNET      = 'magnet';     // 0x287a
-    const MODEL_MOTION      = 'motion';     // 0x287b
-    const MODEL_SWITCH      = 'switch';     // 0x287c
-    const MODEL_SENSOR_HT   = 'sensor_ht';  // 0x288c
-    const MODEL_CUBE        = 'cube';       // 0x28bc
-    
+{      
     protected $_model = '';
     protected $_sid = '';
 
