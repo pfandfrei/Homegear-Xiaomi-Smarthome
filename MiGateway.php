@@ -11,6 +11,7 @@ include_once 'MiSwitch.php';
 include_once 'MiCube.php';
 include_once 'MiMotion.php';
 include_once 'MiMagnet.php';
+include_once 'MiGenericSwitch.php';
 
 
 class StackableArray extends Threaded
@@ -175,6 +176,13 @@ class MiGateway extends Threaded
                     case MiConstants::MODEL_MOTION:
                         $this->_devices[$deviceid] = new MiMotion($data);
                         break;
+                    case MiConstants::MODEL_CTRL_NEUTRAL1:
+                    case MiConstants::MODEL_86SW1:
+                    case MiConstants::MODEL_CTRL_NEUTRAL2:
+                    case MiConstants::MODEL_86SW2:
+                    case MiConstants::MODEL_:
+                        $this->_devices[$deviceid] = new MiGenericSwitch($data, $deviceinfo->model);
+                        break;
                 }
             }
         }
@@ -275,7 +283,12 @@ class MiGateway extends Threaded
                 {
                     if ($event['PEERID'] == $device->getPeerId())
                     {
-                        $device->updateEvent($hg, $event);
+                        if (FALSE !== ($json = $device->updateEvent($hg, $event)))
+                        {
+                            $json->data->key = $this->getGatewayKey();
+                            $cmd = json_encode($json);
+                            $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_WRITE);
+                        }
                     }
                 }
             }
@@ -379,19 +392,19 @@ class MiGateway extends Threaded
     public function setRGB($rgbh)
     {
         $cmd = '{"cmd":"write","model":"'.$this->_model.'","sid":"'.$this->_sid.'","short_id":0,"data":"{\"rgb\":'.$rgbh.',"key":"'.$this->getGatewayKey().'"}"}';
-        $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_WRITE);;
+        $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_WRITE);
     }
 
     public function playMusic($mid, $vol)
     {
         $cmd = '{"cmd":"write","model":"'.$this->_model.'","sid":"'.$this->_sid.'","short_id":0,"data":"{\"mid\":'.$mid.',\"vol\":'.$vol.',"key":"'.$this->getGatewayKey().'"}"}';
-        $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_WRITE);;
+        $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_WRITE);
     }
 
     public function stopMusic()
     {
         $cmd = '{"cmd":"write","model":"'.$this->_model.'","sid":"'.$this->_sid.'","short_id":0,"data":"{\"mid\":10000,"key":"'.$this->getGatewayKey().'"}"}';
-        $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_WRITE);;
+        $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_WRITE);
     }
 
 }

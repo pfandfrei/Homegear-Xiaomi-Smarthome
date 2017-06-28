@@ -4,9 +4,9 @@
  *-->
 <homegearDevice version="1">
     <supportedDevices>
-        <device id="MiMoton">
-            <description>Xiaomi Smart Home Motion Sensor - homegear interface</description>
-            <typeNumber>0x287b</typeNumber>
+        <device id="MiCtrlNeutral2">
+            <description>Xiaomi Smart Home 86 single fire switch double button - homegear interface</description>
+            <typeNumber>0x28d0</typeNumber>
         </device>
     </supportedDevices>
     <runProgram>
@@ -16,12 +16,16 @@
         <function channel="0" type="SETTINGS" channelCount="1">
             <properties/>
             <configParameters>custom_ch0_master</configParameters>
-	    <variables>custom_ch0_values</variables>
         </function>
-        <function channel="1" type="MOTION" channelCount="1">
+        <function channel="1" type="KEY" channelCount="1">
             <properties/>
             <configParameters>config</configParameters>
-            <variables>custom_ch1_motion</variables>
+            <variables>custom_ch1_key</variables>
+        </function>
+        <function channel="2" type="KEY" channelCount="1">
+            <properties/>
+            <configParameters>config</configParameters>
+            <variables>custom_ch2_key</variables>
         </function>
     </functions>
     <packets/>
@@ -57,24 +61,53 @@
                 </physicalInteger>
             </parameter> 
         </configParameters>
-        <variables id="custom_ch0_values">
-            <parameter id="VOLTAGE">
+        <variables id="custom_ch1_key">
+            <parameter id="STATE">
                 <properties>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>
-                    <unit>mV</unit>
+                    <unit></unit>
                     <casts>
                         <rpcBinary/>
                     </casts>
                 </properties>
-                <logicalDecimal/>
+                <logicalBoolean/>
+                <physicalBoolean>
+                    <operationType>store</operationType>
+                </physicalBoolean>
+            </parameter>
+            <parameter id="PRESS_SHORT">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalAction>
+                </logicalAction>
                 <physicalInteger>
                     <operationType>store</operationType>
                 </physicalInteger>
             </parameter>
         </variables>
-        <variables id="custom_ch1_motion">
-            <parameter id="MOTION">
+        <variables id="custom_ch2_key">
+            <parameter id="STATE">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalBoolean/>
+                <physicalBoolean>
+                    <operationType>store</operationType>
+                </physicalBoolean>
+            </parameter>
+            <parameter id="PRESS_SHORT">
                 <properties>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>

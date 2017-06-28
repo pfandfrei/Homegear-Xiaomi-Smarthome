@@ -27,11 +27,16 @@ class MiConstants
     const HEARTBEAT         = 'heartbeat';
     const REPORT            = 'report';
     
-    const MODEL_GATEWAY     = 'gateway';
-    const MODEL_CUBE        = 'cube';
-    const MODEL_MAGNET      = 'magnet';
-    const MODEL_MOTION      = 'motion';
-    const MODEL_SWITCH      = 'switch';
-    const MODEL_SENSOR_HT   = 'sensor_ht';
+    const MODEL_UNKNOWN         = '';
+    const MODEL_GATEWAY         = 'gateway';        // 0x286c
+    const MODEL_MAGNET          = 'magnet';         // 0x287a
+    const MODEL_MOTION          = 'motion';         // 0x287b
+    const MODEL_SWITCH          = 'switch';         // 0x287c
+    const MODEL_SENSOR_HT       = 'sensor_ht';      // 0x288c
+    const MODEL_CUBE            = 'cube';           // 0x28bc
+    const MODEL_CTRL_NEUTRAL1   = 'ctrl_neutral1';  // 0x28c0
+    const MODEL_86SW1           = '86sw1';          // 0x28c1
+    const MODEL_CTRL_NEUTRAL2   = 'ctrl_neutral2';  // 0x28d0
+    const MODEL_86SW2           = '86sw2';          // 0x28d1
 }
 
