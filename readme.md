@@ -1,3 +1,5 @@
+## Xiaomi Smart Home - Homegear Interface
+V0.2.0 - (untested - no hardware) support ctrl_neutral1, ctrl_neutral2, 86sw1, 86sw2
 # Step 1: bring Xiaomi Gateway in developer mode #
 
 1. Install the MiHome app on your mobile phone
