@@ -26,12 +26,20 @@ class MiGenericSwitch extends MiBaseDevice
                 $this->_type_id = 0x28c1;
                 $this->_channels = 1;
                 break;
+            case MiConstants::MODEL_CTRL_LN1:
+                $this->_type_id = 0x28c2;
+                $this->_channels = 1;
+                break;
             case MiConstants::MODEL_CTRL_NEUTRAL2:
                 $this->_type_id = 0x28d0;
                 $this->_channels = 2;
                 break;
             case MiConstants::MODEL_86SW2:
                 $this->_type_id = 0x28d1;
+                $this->_channels = 2;
+                break;
+            case MiConstants::MODEL_CTRL_LN2:
+                $this->_type_id = 0x28d2;
                 $this->_channels = 2;
                 break;
             default:

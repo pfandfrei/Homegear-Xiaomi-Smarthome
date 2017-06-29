@@ -1,0 +1,92 @@
+<!--
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * (c) Frank Motzkau 2017
+ *-->
+<homegearDevice version="1">
+    <supportedDevices>
+        <device id="MiCtrlLn1">
+            <description>Xiaomi Smart Home 86 single fire switch single button - homegear interface</description>
+            <typeNumber>0x28c2</typeNumber>
+        </device>
+    </supportedDevices>
+    <runProgram>
+    </runProgram>
+    <properties/>
+    <functions>
+        <function channel="0" type="SETTINGS" channelCount="1">
+            <properties/>
+            <configParameters>custom_ch0_master</configParameters>
+        </function>
+        <function channel="1" type="KEY" channelCount="1">
+            <properties/>
+            <configParameters>config</configParameters>
+            <variables>custom_ch1_key</variables>
+        </function>
+    </functions>
+    <packets/>
+    <parameterGroups>
+        <configParameters id="config"/>
+        <configParameters id="custom_ch0_master">
+            <parameter id="SID">
+                <properties>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalString>
+                    <defaultValue></defaultValue>
+                </logicalString>
+                <physicalString>
+                    <operationType>config</operationType>
+                </physicalString>
+            </parameter>
+            <parameter id="HEARTBEAT">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalDecimal/>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter> 
+        </configParameters>
+        <variables id="custom_ch1_key">
+            <parameter id="STATE">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalBoolean/>
+                <physicalBoolean>
+                    <operationType>store</operationType>
+                </physicalBoolean>
+            </parameter>
+            <parameter id="PRESS_SHORT">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalAction>
+                </logicalAction>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+        </variables>
+    </parameterGroups>
+</homegearDevice>
+

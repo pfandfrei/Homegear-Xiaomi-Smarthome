@@ -178,9 +178,10 @@ class MiGateway extends Threaded
                         break;
                     case MiConstants::MODEL_CTRL_NEUTRAL1:
                     case MiConstants::MODEL_86SW1:
+                    case MiConstants::MODEL_CTRL_LN1:
                     case MiConstants::MODEL_CTRL_NEUTRAL2:
                     case MiConstants::MODEL_86SW2:
-                    case MiConstants::MODEL_:
+                    case MiConstants::MODEL_CTRL_LN2:
                         $this->_devices[$deviceid] = new MiGenericSwitch($data, $deviceinfo->model);
                         break;
                 }

@@ -36,7 +36,9 @@ class MiConstants
     const MODEL_CUBE            = 'cube';           // 0x28bc
     const MODEL_CTRL_NEUTRAL1   = 'ctrl_neutral1';  // 0x28c0
     const MODEL_86SW1           = '86sw1';          // 0x28c1
+    const MODEL_CTRL_LN1        = 'ctrl_ln1';       // 0x28c2
     const MODEL_CTRL_NEUTRAL2   = 'ctrl_neutral2';  // 0x28d0
     const MODEL_86SW2           = '86sw2';          // 0x28d1
+    const MODEL_CTRL_LN2        = 'ctrl_ln2';       // 0x28d2
 }
 
