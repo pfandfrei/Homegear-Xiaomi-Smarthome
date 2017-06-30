@@ -34,7 +34,7 @@ class MiMagnet extends MiBaseDevice
                 case 'unknown':
                     $hg->setValue($this->_peerId, 1, 'STATE', MiMagnet::STATE_UNKNOWN);
                     break;
-                case 'closed':
+                case 'close':
                     $hg->setValue($this->_peerId, 1, 'STATE', MiMagnet::STATE_CLOSED);
                     break;
                 case 'open':
