@@ -47,6 +47,7 @@ class MiSwitch extends MiBaseDevice
     
     public function updateEvent($hg, $event)
     {
-        parent::updateEvent($hg, $event);
+        //parent::updateEvent($hg, $event);
+        return FALSE;
     }
 }
