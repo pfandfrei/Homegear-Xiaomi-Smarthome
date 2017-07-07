@@ -67,7 +67,7 @@
                         <rpcBinary/>
                     </casts>
                 </properties>
-                <logicalDecimal/>
+                <logicalInteger/>
                 <physicalInteger>
                     <operationType>store</operationType>
                 </physicalInteger>

@@ -4,7 +4,7 @@
  *-->
 <homegearDevice version="1">
     <supportedDevices>
-        <device id="MiMoton">
+        <device id="MiMotion">
             <description>Xiaomi Smart Home Motion Sensor - homegear interface</description>
             <typeNumber>0x287b</typeNumber>
         </device>
@@ -67,7 +67,7 @@
                         <rpcBinary/>
                     </casts>
                 </properties>
-                <logicalDecimal/>
+                <logicalInteger/>
                 <physicalInteger>
                     <operationType>store</operationType>
                 </physicalInteger>
