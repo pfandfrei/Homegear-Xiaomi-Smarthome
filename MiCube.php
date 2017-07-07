@@ -13,7 +13,7 @@ class MiCube extends MiBaseDevice
     
     public function __construct($config)
     {
-        $this->_model = MiConstants::MODEL_SWITCH;
+        $this->_model = MiConstants::MODEL_CUBE;
         parent::__construct($config);        
     }
     
