@@ -171,7 +171,7 @@ class MiCentral extends Threaded
                                     $gateway->debug_log($json);
                                     if (property_exists($data, 'error'))
                                     {
-                                        $gateway->debug_log($data->error);
+                                        // todo: error handling
                                     }
                                     $gateway->updateData($hg, $response);
                                     break;
