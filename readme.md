@@ -52,6 +52,16 @@ All Xiaomi devices have to be added in MiHome app.
 - PRESS_LONG_RELEASE is set when longer pressed button is released
 - PRESS_DOUBLE is set when button is double clicked
   
+**door sensor (MiMagnet)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- STATE (OPEN: sensor is opened, CLOSED: sensor is closed, UNKNOWN: state is not known e.g. after power on)
+
+**occupancy sensor (MiMotion)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- MOTION is set true if motion is detected. Value is set not more than once a minute
+
 ## all other devices are untested until now, because I do not own these devices ##
 **cube (MiCube)**
 
@@ -64,16 +74,6 @@ All Xiaomi devices have to be added in MiHome app.
 - SWING tbd
 - ALERT tbd 
 - FREE_FALL tbd
-
-**door sensor (MiMagnet)**
-
-- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
-- STATE (OPEN: sensor is opened, CLOSED: sensor is closed, UNKNOWN: state is not known e.g. after power on)
-
-**occupancy sensor (MiMotion)**
-
-- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
-- MOTION is set true if motion is detected. Value is set not more than once a minute
 
 *wall switches, gas/smoke sensors are currently not implemented/will be implemented later*
 
