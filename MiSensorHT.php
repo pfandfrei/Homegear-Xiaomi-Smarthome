@@ -48,4 +48,10 @@ class MiSensorHT extends MiBaseDevice
     {
         return $this->_humidity / 100.0;
     }
+    
+    public function updateEvent($hg, $event)
+    {
+        //parent::updateEvent($hg, $event);
+        return FALSE;
+    }
 }

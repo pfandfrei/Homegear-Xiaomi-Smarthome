@@ -40,5 +40,9 @@ class MiConstants
     const MODEL_CTRL_NEUTRAL2   = 'ctrl_neutral2';  // 0x28d0
     const MODEL_86SW2           = '86sw2';          // 0x28d1
     const MODEL_CTRL_LN2        = 'ctrl_ln2';       // 0x28d2
+    const MODEL_SMOKE           = 'smoke';          // 0x28e0
+    const MODEL_NATGAS          = 'natgas';         // 0x28e1
+    const MODEL_PLUG            = 'plug';           // 0x28f0
+    const MODEL_86PLUG          = '86plug';         // 0x28f1
 }
 

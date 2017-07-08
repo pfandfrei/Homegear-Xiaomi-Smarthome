@@ -184,6 +184,14 @@ class MiGateway extends Threaded
                     case MiConstants::MODEL_CTRL_LN2:
                         $this->_devices[$deviceid] = new MiGenericSwitch($data, $deviceinfo->model);
                         break;
+                    case MiConstants::MODEL_SMOKE:
+                    case MiConstants::MODEL_NATGAS:
+                        $this->_devices[$deviceid] = new MiGenericAlarm($data, $deviceinfo->model);
+                        break;
+                    case MiConstants::MODEL_PLUG:
+                    case MiConstants::MODEL_86PLUG:
+                        $this->_devices[$deviceid] = new MiGenericSocket($data, $deviceinfo->model);
+                        break;
                 }
             }
         }

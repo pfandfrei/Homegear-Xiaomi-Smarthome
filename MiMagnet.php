@@ -11,9 +11,9 @@ class MiMagnet extends MiBaseDevice
 {
     const TYPE_ID = 0x287a;
     
-    const STATE_UNKNOWN = 0;
+    const STATE_OPEN = 0;
     const STATE_CLOSED = 1;
-    const STATE_OPEN = 2;
+    const STATE_UNKNOWN = 2;
     
     public function __construct($config)
     {

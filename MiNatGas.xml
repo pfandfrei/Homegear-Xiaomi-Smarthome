@@ -4,9 +4,9 @@
  *-->
 <homegearDevice version="1">
     <supportedDevices>
-        <device id="MiMagnet">
-            <description>Xiaomi Smart Home Door Sensor - homegear interface</description>
-            <typeNumber>0x287a</typeNumber>
+        <device id="MiNatGas">
+            <description>Xiaomi Smart Home Naural Gas Sensor - homegear interface</description>
+            <typeNumber>0x28e1</typeNumber>
         </device>
     </supportedDevices>
     <runProgram>
@@ -21,7 +21,7 @@
         <function channel="1" type="STATUS" channelCount="1">
             <properties/>
             <configParameters>config</configParameters>
-            <variables>custom_ch1_action</variables>
+            <variables>custom_ch1_alarm</variables>
         </function>
     </functions>
     <packets/>
@@ -73,8 +73,8 @@
                 </physicalInteger>
             </parameter>
         </variables>
-        <variables id="custom_ch1_action">
-            <parameter id="STATE">
+        <variables id="custom_ch1_alarm">
+            <parameter id="ALARM">
                 <properties>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>
@@ -84,16 +84,24 @@
                 </properties>
                 <logicalEnumeration>
                     <value>
-                        <id>OPEN</id>
+                        <id>RELEASE_ALARM</id>
                         <index>0</index>
                     </value>
                     <value>
-                        <id>CLOSED</id>
+                        <id>FIRE_ALARM</id>
                         <index>1</index>
                     </value>
                     <value>
-                        <id>UNKNOWN</id>
+                        <id>ANALOG_ALARM</id>
                         <index>2</index>
+                    </value>
+                    <value>
+                        <id>SENSITIVY_FAULT</id>
+                        <index>64</index>
+                    </value>
+                    <value>
+                        <id>IIC_FAULT</id>
+                        <index>32768</index>
                     </value>
                 </logicalEnumeration>
                 <physicalInteger>
