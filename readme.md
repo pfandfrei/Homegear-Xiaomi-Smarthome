@@ -1,5 +1,5 @@
 ## Xiaomi Smart Home - Homegear Interface
-V0.3.0 
+V0.4.0 supports firmware version 1.4.1_148.0143
 
 # Step 1: bring Xiaomi Gateway in developer mode #
 
@@ -102,6 +102,32 @@ All Xiaomi devices have to be added in MiHome app.
 **Xiaomi MiJia Honeywell Natural Gas Detector (MiNatGas)**
 
 - ALARM (Release alarm/Fire alarm/Analog alarm/Sensitivity fault alarm/IIC communication failure)
+
+**Xiaomi Aqara Temperature Humidity Sensor (MiWeatherV1)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- HUMIDITY shows curret humidity in %. It will be updated when value changes by more than 0,5%
+- TEMPERATURE shows current temperature in °C. It will be updated when value changes by more than 0,5°C
+- PRESSURE shows current pressure 
+
+**Xiaomi Aqara Smart Wireless Switch (MiSwitchAq2)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- PRESS_SHORT is set when button is clicked 
+- PRESS_LONG is set when button is longer pressed and hold 
+- PRESS_LONG_RELEASE is set when longer pressed button is released
+- PRESS_DOUBLE is set when button is double clicked
+  
+**Xiaomi Aqara Window Door Sensor (MiMagnetAq2)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- STATE (OPEN: sensor is opened, CLOSED: sensor is closed, UNKNOWN: state is not known e.g. after power on)
+
+**Xiaomi Smart Home Aqara Human Body Sensor (MiMotion)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- MOTION is set true if motion is detected. Value is set not more than once a minute
+- ILLUMINATION ambient light
 
 ## not implemented ##
 

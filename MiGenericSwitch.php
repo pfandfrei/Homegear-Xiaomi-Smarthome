@@ -8,8 +8,7 @@
 include_once 'MiConstants.php';
 
 class MiGenericSwitch extends MiBaseDevice
-{
-    
+{    
     private $_channels;
     private $_type_id;
     

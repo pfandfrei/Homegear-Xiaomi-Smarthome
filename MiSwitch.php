@@ -9,15 +9,26 @@ include_once 'MiConstants.php';
 
 class MiSwitch extends MiBaseDevice
 {
-    const TYPE_ID = 0x287c;
+    private $_type_id;
     
-    public function __construct($config)
+    public function __construct($config, $model)
     {
-        $this->_model = MiConstants::MODEL_SWITCH;
-        parent::__construct($config);        
+        $this->_model = $model;
+        switch ($model)
+        {
+            case MiConstants::MODEL_SWITCH:
+                $this->_type_id = 0x287c;
+                break;
+            case MiConstants::MODEL_SWITCH_AQ2:
+                $this->_type_id = 0x287d;
+                break;
+            default:
+                $this->_model = MiConstants::MODEL_UNKNOWN;
+        }
+        parent::__construct($config);              
     }
     
-    public function getTypeId() { return MiSwitch::TYPE_ID; }
+    public function getTypeId() { return $this->_type_id; }
     
     public function updateData($hg, $data)
     {

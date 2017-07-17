@@ -162,19 +162,23 @@ class MiGateway extends Threaded
                         //$this->updateData($hg, $deviceinfo);
                         break;
                     case MiConstants::MODEL_SWITCH:
-                        $this->_devices[$deviceid] = new MiSwitch($data);
+                    case MiConstants::MODEL_SWITCH_AQ2:
+                        $this->_devices[$deviceid] = new MiSwitch($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_SENSOR_HT:
-                        $this->_devices[$deviceid] = new MiSensorHT($data);
+                    case MiConstants::MODEL_WEATHER_V1:
+                        $this->_devices[$deviceid] = new MiSensorHT($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_CUBE:
                         $this->_devices[$deviceid] = new MiCube($data);
                         break;
                     case MiConstants::MODEL_MAGNET:
-                        $this->_devices[$deviceid] = new MiMagnet($data);
+                    case MiConstants::MODEL_MAGNET_AQ2:
+                        $this->_devices[$deviceid] = new MiMagnet($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_MOTION:
-                        $this->_devices[$deviceid] = new MiMotion($data);
+                    case MiConstants::MODEL_MOTION_AQ2:
+                        $this->_devices[$deviceid] = new MiMotion($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_CTRL_NEUTRAL1:
                     case MiConstants::MODEL_86SW1:

@@ -9,15 +9,28 @@ include_once 'MiConstants.php';
 
 class MiMotion extends MiBaseDevice
 {
-    const TYPE_ID = 0x287b;
+    private $_type_id;
     
-    public function __construct($config)
+    protected $_illumination;
+    
+    public function __construct($config, $model)
     {
-        $this->_model = MiConstants::MODEL_MOTION;
+        $this->_model = $model;
+        switch ($model)
+        {
+            case MiConstants::MODEL_MOTION:
+                $this->_type_id = 0x287b;
+                break;
+            case MiConstants::MODEL_MOTION_AQ2:
+                $this->_type_id = 0x287e;
+                break;
+            default:
+                $this->_model = MiConstants::MODEL_UNKNOWN;
+        }
         parent::__construct($config);        
     }
     
-    public function getTypeId() { return MiMotion::TYPE_ID; }
+    public function getTypeId() { return $this->_type_id; }
     
     public function updateData($hg, $data)
     {
@@ -32,6 +45,15 @@ class MiMotion extends MiBaseDevice
                     break;
             }
         }
+        if ($this->setProperty($data, 'illumination'))
+        {
+            $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->illumination); 
+        }
+    }
+    
+    public function getIllumination()
+    {
+        return $this->_illumination;
     }
     
     public function updateEvent($hg, $event)

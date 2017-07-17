@@ -10,20 +10,34 @@ include_once 'MiBaseDevice.php';
 
 class MiSensorHT extends MiBaseDevice
 {
-    const TYPE_ID = 0x288c;
+    private $_type_id;
     
     protected $_temperature;
     protected $_humidity;
+    protected $_pressure;
     
-    public function __construct($data)
+    public function __construct($data, $model)
     {
-        $this->_model = MiConstants::MODEL_SENSOR_HT;
-        parent::__construct($data);   
+        $this->_model = $model;
+        switch ($model)
+        {;
+            case MiConstants::MODEL_SENSOR_HT:
+                $this->_type_id = 0x288c;
+                break;
+            case MiConstants::MODEL_WEATHER_V1:
+                $this->_type_id = 0x288d;
+                break;
+            default:
+                $this->_model = MiConstants::MODEL_UNKNOWN;
+                break;
+        }
+        
         $this->setProperty($data, 'temperature');
         $this->setProperty($data, 'humidity');
+        $this->setProperty($data, 'pressure');
     }    
     
-    public function getTypeId() { return MiSensorHT::TYPE_ID; }
+    public function getTypeId() { return $this->_type_id; }
     
     public function updateData($hg, $data)
     {
@@ -37,6 +51,10 @@ class MiSensorHT extends MiBaseDevice
         {
             $hg->setValue($this->_peerId, 1, 'HUMIDITY', intval($data->humidity)/100.0);   
         }
+        if ($this->setProperty($data, 'pressure'))
+        {
+            $hg->setValue($this->_peerId, 1, 'PRESSURE', intval($data->pressure));   
+        }
     }
     
     public function getTemperature()
@@ -47,6 +65,11 @@ class MiSensorHT extends MiBaseDevice
     public function getHumidity()
     {
         return $this->_humidity / 100.0;
+    }
+    
+    public function getPressure()
+    {
+        return $this->_pressure;
     }
     
     public function updateEvent($hg, $event)
