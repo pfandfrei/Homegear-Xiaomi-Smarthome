@@ -11,7 +11,7 @@ class MiMotion extends MiBaseDevice
 {
     private $_type_id;
     
-    protected $_illumination;
+    protected $_lux;
     
     public function __construct($config, $model)
     {
@@ -45,9 +45,9 @@ class MiMotion extends MiBaseDevice
                     break;
             }
         }
-        if ($this->setProperty($data, 'illumination'))
+        if ($this->setProperty($data, 'lux'))
         {
-            $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->illumination); 
+            $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->lux); 
         }
     }
     
