@@ -23,6 +23,10 @@
             <configParameters>config</configParameters>
             <variables>custom_ch1_action</variables>
         </function>
+        <function channel="2" type="ROTATE" channelCount="1">
+            <properties/>
+            <variables>custom_ch2_rotate</variables>
+        </function>
     </functions>
     <packets/>
     <parameterGroups>
@@ -190,6 +194,36 @@
                 </properties>
                 <logicalAction>
                 </logicalAction>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+        </variables>
+        <variables id="custom_ch2_rotate">
+            <parameter id="ROTATE">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger/>
+                <physicalInteger>
+                    <operationType>store</operationType>
+                </physicalInteger>
+            </parameter>
+            <parameter id="TIME">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit>ms</unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalInteger/>
                 <physicalInteger>
                     <operationType>store</operationType>
                 </physicalInteger>
