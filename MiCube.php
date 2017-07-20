@@ -26,7 +26,9 @@ class MiCube extends MiBaseDevice
         if (property_exists($data, 'rotate'))
         {
             $rotate = json_decode($data->rotate);
-            list($angle, $time) = split(',', $rotate);
+    $now = strftime('%Y-%m-%d %H:%M:%S');
+    error_log($now . ' >>  ' . $rotate . PHP_EOL, 3, MiConstants::LOGFILE);
+            list($angle, $time) = explode(',', $rotate);
             $hg->setValue($this->_peerId, 2, 'ROTATE', intval($angle));
             $hg->setValue($this->_peerId, 2, 'TIME', intval($time));
             if (intval($angle) < 0)
