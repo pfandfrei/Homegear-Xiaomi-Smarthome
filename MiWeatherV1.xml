@@ -108,7 +108,7 @@
                 <properties>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>
-                    <unit></unit>
+                    <unit>kPa</unit>
                     <casts>
                         <rpcBinary/>
                     </casts>

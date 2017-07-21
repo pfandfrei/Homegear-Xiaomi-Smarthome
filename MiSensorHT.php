@@ -53,7 +53,7 @@ class MiSensorHT extends MiBaseDevice
         }
         if ($this->setProperty($data, 'pressure'))
         {
-            $hg->setValue($this->_peerId, 1, 'PRESSURE', intval($data->pressure));   
+            $hg->setValue($this->_peerId, 1, 'PRESSURE', intval($data->pressure)/100.0);   
         }
     }
     
@@ -69,7 +69,7 @@ class MiSensorHT extends MiBaseDevice
     
     public function getPressure()
     {
-        return $this->_pressure;
+        return $this->_pressure / 100.0;
     }
     
     public function updateEvent($hg, $event)
