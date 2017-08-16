@@ -6,7 +6,7 @@
     <supportedDevices>
         <device id="Mi86Sw2">
             <description>Xiaomi Smart Home Wireless switch 86 double button - homegear interface</description>
-            <typeNumber>0x28c1</typeNumber>
+            <typeNumber>0x28d1</typeNumber>
         </device>
     </supportedDevices>
     <runProgram>
