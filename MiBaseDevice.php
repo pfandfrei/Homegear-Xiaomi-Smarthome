@@ -29,9 +29,15 @@ abstract class MiBaseDevice extends Threaded
     
     public function updateData($hg, $data)
     {
-        if ($this->setProperty($data, 'voltage'))
+        try
         {
-            $hg->setValue($this->_peerId, 0, 'VOLTAGE', intval($data->voltage));   
+            if ($this->setProperty($data, 'voltage'))
+            {
+                $hg->setValue($this->_peerId, 0, 'VOLTAGE', intval($data->voltage));   
+            }
+        }
+        catch (Exception $e)
+        {
         }
     }
     
