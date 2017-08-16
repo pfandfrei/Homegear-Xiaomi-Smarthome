@@ -4,14 +4,15 @@
  * (c) Frank Motzkau 2017
  */
 
-
 include_once 'MiConstants.php';
+include_once 'MiCube.php';
+include_once 'MiGenericAlarm.php';
+include_once 'MiGenericSocket.php';
+include_once 'MiGenericSwitch.php';
+include_once 'MiMagnet.php';
+include_once 'MiMotion.php';
 include_once 'MiSensorHT.php';
 include_once 'MiSwitch.php';
-include_once 'MiCube.php';
-include_once 'MiMotion.php';
-include_once 'MiMagnet.php';
-include_once 'MiGenericSwitch.php';
 
 
 class StackableArray extends Threaded
