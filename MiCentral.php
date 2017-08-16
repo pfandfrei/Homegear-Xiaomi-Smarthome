@@ -155,6 +155,7 @@ class MiCentral extends Threaded
             socket_recvfrom($socket_recv, $json, 1024, MSG_WAITALL, $from, $port);
             if (!is_null($json))
             {
+                $log_unknown = TRUE;
                 $response = json_decode($json);
                 $data = json_decode($response->data);
                 switch ($response->cmd)
@@ -168,6 +169,7 @@ class MiCentral extends Threaded
                             {
                                 if ($gateway->getSid() == $response->sid)
                                 {
+                                    $log_unknown = FALSE;
                                     $gateway->debug_log($json);
                                     if (property_exists($data, 'error'))
                                     {
@@ -182,16 +184,28 @@ class MiCentral extends Threaded
                         {
                             if (FALSE !== ($gateway = $this->updateDevice($hg, $response->sid, $data)))
                             {
+                                $log_unknown = FALSE;
                                 $gateway->debug_log($json);
                             }
                         }
                         break;
                     case MiConstants::ACK_WRITE:
                         // todo error handling 
+                        $log_unknown = FALSE;
                         break;
+                }
+                if ($log_unknown)
+                {
+                    $this->error_log($response);
                 }
             }
         }
         while (TRUE);
+    }
+    
+    private function error_log($response)
+    {
+        $now = strftime('%Y-%m-%d %H:%M:%S');
+        error_log('UNKNOWN >> ' . $now . ' >>  ' . $response . PHP_EOL, 3, MiConstants::LOGFILE);
     }
 }
