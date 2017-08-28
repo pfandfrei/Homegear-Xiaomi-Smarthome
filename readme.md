@@ -78,9 +78,14 @@ All Xiaomi devices have to be added in MiHome app.
 - POWER_CONSUMED sum of consumed electrical power in kWh
 
 **Xiaomi Aqara Wall Outlet (Mi86Plug)**
+
 - STATE (ON: socket is switched on, OFF: socket is switched off)
 - LOAD_POWER actually consumed power in W
 - POWER_CONSUMED sum of consumed electrical power in kWh
+
+**Xiaomi Aqara Water Leak Sensor (MiWLeakAq1)**
+
+- LEAK is set to true if water is detected
 
 **[Xiaomi Mi Smart Home Cube](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mi-smart-home-cube-white/) (MiCube)**
 

@@ -35,6 +35,7 @@ class MiConstants
     const MODEL_SWITCH          = 'switch';             // 0x287c
     const MODEL_SWITCH_AQ2      = 'sensor_switch.aq2';  // 0x287d
     const MODEL_MOTION_AQ2      = 'sensor_motion.aq2';  // 0x287e
+    const MODEL_WLEAK_AQ1       = 'sensor_wleak.aq1';   // 0x287f
     const MODEL_SENSOR_HT       = 'sensor_ht';          // 0x288c
     const MODEL_WEATHER_V1      = 'weather.v1';         // 0x288d
     const MODEL_CUBE            = 'cube';               // 0x28bc

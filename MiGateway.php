@@ -13,6 +13,7 @@ include_once 'MiMagnet.php';
 include_once 'MiMotion.php';
 include_once 'MiSensorHT.php';
 include_once 'MiSwitch.php';
+include_once 'MiWLeakAq1.php';
 
 
 class StackableArray extends Threaded
@@ -196,6 +197,9 @@ class MiGateway extends Threaded
                     case MiConstants::MODEL_PLUG:
                     case MiConstants::MODEL_86PLUG:
                         $this->_devices[$deviceid] = new MiGenericSocket($data, $deviceinfo->model);
+                        break;
+                    case MiConstants::MODEL_WLEAK_AQ1:
+                        $this->_devices[$deviceid] = new MiWLeakAq1($data);
                         break;
                 }
             }
