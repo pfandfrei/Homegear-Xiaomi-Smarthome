@@ -6,6 +6,7 @@
 
 
 include_once 'MiConstants.php';
+include_once 'MiBaseDevice.php';
 
 class MiSwitch extends MiBaseDevice
 {
