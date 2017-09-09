@@ -1,6 +1,6 @@
 <?php
 /*
- * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.7.x
  * (c) Frank Motzkau 2017
  */
 
@@ -38,7 +38,7 @@ class MiGenericAlarm extends MiBaseDevice
     {
         parent::updateData($hg, $data);
         
-        if (setProperty($data, 'alarm'))
+        if ($this->setProperty($data, 'alarm'))
         {
             $hg->setValue($this->_peerId, 1, 'ALARM', intval($data->alarm));
         }

@@ -1,6 +1,6 @@
 <?php
 /*
- * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.7.x
  * (c) Frank Motzkau 2017
  */
 
@@ -99,6 +99,11 @@ class EventThread extends Thread
 $hg = new \Homegear\Homegear();
 $peerId = (integer) $argv[0];
 $scriptId = $hg->getScriptId();
+if (!$peerId)
+{
+    echo "#### MiSmartHome for Homegear 0.7.x ####\r\n";
+    echo "#### auto-discovering devices ...   ####\r\n";
+}
 
 $central = new MiCentral();
 $sharedData = new SharedData($scriptId, $peerId);
@@ -118,5 +123,15 @@ if ($peerId > 0)
 }
 else
 {
-    echo "\r\nInstallation completed!\r\n";
+    $hg = new \Homegear\Homegear();
+    $version = $hg->getVersion();
+    if ($version<'Homegear 0.7')
+    {
+        echo "\r\n\r\n\033[31m#### warning: $version is not supported\r\n";
+        echo "### maybe it will work, but it is untested\r\n";
+        echo "### please update to Homegear 0.7.x or newer\033[0m\r\n";
+    }
+    echo "\r\n\r\nfound the following devices:\r\n";
+    $central->listDevices();
+    echo "\r\nInstallation completed!\r\n\r\n";
 }

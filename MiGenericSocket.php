@@ -1,6 +1,6 @@
 <?php
 /*
- * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.7.x
  * (c) Frank Motzkau 2017
  */
 

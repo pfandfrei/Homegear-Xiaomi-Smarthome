@@ -1,6 +1,8 @@
 ## Xiaomi Smart Home - Homegear Interface
 V0.4.0 supports firmware version 1.4.1_148.0143
 
+supports Homegear 0.7.x 
+
 # Step 1: bring Xiaomi Gateway in developer mode #
 
 1. Install the MiHome app on your mobile phone

@@ -1,6 +1,6 @@
 <?php
 /*
- * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.7.x
  * (c) Frank Motzkau 2017
  */
 
@@ -30,7 +30,7 @@ class MiGateway extends Threaded
 
     const CMD_GET_ID_LIST = '{"cmd":"get_id_list"}';
     const ACK_GET_ID_LIST = 'get_id_list_ack';
-
+    
     private $_enable = FALSE;
     private $_rgb = 0;
     private $_illumination = 0;
@@ -108,7 +108,12 @@ class MiGateway extends Threaded
     private function setProtoVersion($hg, $proto_version)
     {
         $this->_proto_version = $proto_version;
-        $hg->putParamset($this->_peerId, 0, ['PROTO_VERSION' => $this->_proto_version]);
+        
+        $version = $hg->getVersion();
+        if ($version>'Homegear 0.7')
+        {
+            $hg->putParamset($this->_peerId, 0, ['PROTO_VERSION' => $this->_proto_version]);
+        }
     }
     
     public function getSid() { return $this->_sid; }
@@ -212,7 +217,7 @@ class MiGateway extends Threaded
         {
             $this->updateData($hg, $response);
             $data = json_decode($response->data);
-            if (property_exists($data, 'proto_version'))
+            if (property_exists($data, 'proto_version') && !$this->_oldVersion)
             {
                 $this->setProtoVersion($hg, $data->proto_version);
             }

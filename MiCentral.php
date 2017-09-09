@@ -1,6 +1,6 @@
 <?php
 /*
- * Homegear Xiaomi Smarthome V0.1 for homegear 0.6.x
+ * Homegear Xiaomi Smarthome V0.1 for homegear 0.7.x
  * (c) Frank Motzkau 2017
  */
 
@@ -27,10 +27,15 @@ class MiCentral extends Threaded
 
     private $_gateways;
     private $_socket;
+    private $_oldversion;
 
     public function __construct()
     {
         $this->_gateways = new StackableArray();
+        
+        $hg = new \Homegear\Homegear();
+        $version = $hg->getVersion();
+        $this->_oldversion = ($version<'Homegear 0.7');
     }
 
     public function discover()
@@ -72,6 +77,31 @@ class MiCentral extends Threaded
         return $this->_gateways;
     }
 
+    public function listDevices()
+    {         
+        echo "─────────┼───────────────────────────┼───────────────┼──────┼───────────────────────────\r\n"; 
+        echo "      ID │ Name                      │ Serial Number │ Type │ Type String               \r\n";            
+        echo "─────────┼───────────────────────────┼───────────────┼──────┼───────────────────────────\r\n"; 
+        
+        $hg = new \Homegear\Homegear();
+        foreach ($this->_gateways as $gateway)
+        {
+            foreach ($gateway->getDevicelist() as $sid)
+            {
+                if ($device = $gateway->getDevice($sid))
+                {
+                    $id = $device->getPeerId();
+                    $config = $hg->getAllConfig($id);
+                    $name = $config[0]['NAME'];
+                    $serial = $config[0]['ADDRESS'];
+                    $typeId = $config[0]['TYPE_ID'];
+                    $type = $config[0]['TYPE'];
+                    echo sprintf("%8d | %25s |    %10s | %4X | %s\r\n", $id, $name, $serial, $typeId, $type);
+                }
+            }
+        }
+    }
+
     private function encodeSid($sid)
     {
         $id = substr('0000000000000000'. $sid, 16);
@@ -88,7 +118,10 @@ class MiCentral extends Threaded
         if (0 == count($peerdIds))
         {
             $peerId = $hg->createDevice(MiCentral::FAMILY_ID, MiGateway::TYPE_ID, $serial, intval($address), /*protoversion*/0x0107);
-            $hg->putParamset($peerId, 0, ['SID'=> $gateway->getSid(), 'IP' => $gateway->getIpAddress(), 'PORT' => 9898]);
+            if (!$this->_oldversion)
+            {
+                $hg->putParamset($peerId, 0, ['SID'=> $gateway->getSid(), 'IP' => $gateway->getIpAddress(), 'PORT' => 9898]);
+            }
             $gateway->setPeerId($peerId);
         }
         else
@@ -106,7 +139,10 @@ class MiCentral extends Threaded
                 if (0 == count($peerdIds))
                 {
                     $peerId = $hg->createDevice(MiCentral::FAMILY_ID, $device->getTypeId(), $serial, intval($address), /*protoversion*/0x0107);
-                    $hg->putParamset($peerId, 0, ['SID' => $sid]);
+                    if (!$this->_oldversion)
+                    {
+                        $hg->putParamset($peerId, 0, ['SID' => $sid]);
+                    }
                     $device->setPeerId($peerId);
                 }
                 else
