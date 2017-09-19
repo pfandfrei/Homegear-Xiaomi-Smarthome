@@ -9,7 +9,7 @@ include_once 'MiBaseDevice.php';
 
 class MiWLeakAq1 extends MiBaseDevice
 {   
-    const TYPE_ID = 0x28bc;
+    const TYPE_ID = 0x287f;
     
     public function __construct($data)
     {
