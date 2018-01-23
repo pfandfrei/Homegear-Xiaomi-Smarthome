@@ -24,10 +24,11 @@ All Xiaomi devices have to be added in MiHome app.
 1. make a ssh connection to homegear device
 2. copy all *.xml files to /etc/homegear/devices/254/
 3. copy all *.php files to /var/lib/homegear/scripts/DeviceScripts/Xiaomi/
-4. if you have changed homegear default path, you have to use the customized paths instead
-5. run 'homegear -e rs DeviceScripts/Xiaomi/MiSmartHome.php'
-6. the script will autodiscover all available Xiaomi devices (see supported devices below) and auto-create Homegear devices
-7. add the password from step 1.10 for the gateway device: `homegear -e rc '$hg->putParamset(<gateway peer id>,0,["PASSWORD"=>"<enter password>"]);'`
+4. Restart homegear (sudo service homegear restart)
+5. if you have changed homegear default path, you have to use the customized paths instead
+6. run 'homegear -e rs DeviceScripts/Xiaomi/MiSmartHome.php'
+7. the script will autodiscover all available Xiaomi devices (see supported devices below) and auto-create Homegear devices
+8. add the password from step 1.10 for the gateway device: `homegear -e rc '$hg->putParamset(<gateway peer id>,0,["PASSWORD"=>"<enter password>"]);'`
 
 # Supported devices (tested)
 
