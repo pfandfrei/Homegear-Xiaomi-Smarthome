@@ -20,7 +20,7 @@ class MiSensorHT extends MiBaseDevice
     {
         $this->_model = $model;
         switch ($model)
-        {;
+        {
             case MiConstants::MODEL_SENSOR_HT:
                 $this->_type_id = 0x288c;
                 break;
