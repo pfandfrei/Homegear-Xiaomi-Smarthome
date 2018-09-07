@@ -56,38 +56,48 @@ class MiGenericSwitch extends MiBaseDevice
     {
         parent::updateData($hg, $data);
         
-        for ($i=0; $i<$this->_channels; $i++)
+        if (property_exists($data, 'dual_channel'))
         {
-            $channel = 'channel_'.$i;
-            if (property_exists($data, $channel))
+            if ($data->dual_channel == 'both_click')
             {
-                switch ($data->{$channel})
-                {
-                    case 'click':
-                        $hg->setValue($this->_peerId, $i+1, 'PRESS_SHORT', TRUE);
-                        break;
-                    case 'long_click_press':
-                        $hg->setValue($this->_peerId, $i+1, 'PRESS_LONG', TRUE);
-                        break;
-                    case 'long_click_release':
-                        $hg->setValue($this->_peerId, $i+1, 'PRESS_LONG_RELEASE', TRUE);
-                        break;
-                    case 'double_click':
-                        $hg->setValue($this->_peerId, $i+1, 'PRESS_DOUBLE', TRUE);
-                        break;
-                    case 'both_click':
-                        $hg->setValue($this->_peerId, $i+1, 'PRESS_BOTH', TRUE);
-                        break;
-                    case 'on':
-                        $hg->setValue($this->_peerId, $i+1, 'STATE', TRUE);
-                        break;
-                    case 'off':
-                        $hg->setValue($this->_peerId, $i+1, 'STATE', FALSE);
-                        break;
-                    default:
-                        break;
-                }
+                $hg->setValue($this->_peerId, $this->_channels+1, 'PRESS_SHORT', TRUE);
             }
+        }
+        else
+        {
+            for ($i=0; $i<$this->_channels; $i++)
+            {
+                $channel = 'channel_'.$i;
+                if (property_exists($data, $channel))
+                {
+                    switch ($data->{$channel})
+                    {
+                        case 'click':
+                            $hg->setValue($this->_peerId, $i+1, 'PRESS_SHORT', TRUE);
+                            break;
+                        case 'long_click_press':
+                            $hg->setValue($this->_peerId, $i+1, 'PRESS_LONG', TRUE);
+                            break;
+                        case 'long_click_release':
+                            $hg->setValue($this->_peerId, $i+1, 'PRESS_LONG_RELEASE', TRUE);
+                            break;
+                        case 'double_click':
+                            $hg->setValue($this->_peerId, $i+1, 'PRESS_DOUBLE', TRUE);
+                            break;
+                        case 'both_click':
+                            $hg->setValue($this->_peerId, $i+1, 'PRESS_BOTH', TRUE);
+                            break;
+                        case 'on':
+                            $hg->setValue($this->_peerId, $i+1, 'STATE', TRUE);
+                            break;
+                        case 'off':
+                            $hg->setValue($this->_peerId, $i+1, 'STATE', FALSE);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }            
         }
     }
     

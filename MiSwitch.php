@@ -23,6 +23,9 @@ class MiSwitch extends MiBaseDevice
             case MiConstants::MODEL_SWITCH_AQ2:
                 $this->_type_id = 0x287d;
                 break;
+            case MiConstants::MODEL_SWITCH_AQ3:
+                $this->_type_id = 0x2878;
+                break;
             default:
                 $this->_model = MiConstants::MODEL_UNKNOWN;
         }
@@ -50,6 +53,9 @@ class MiSwitch extends MiBaseDevice
                     break;
                 case 'double_click':
                     $hg->setValue($this->_peerId, 1, 'PRESS_DOUBLE', TRUE);
+                    break;
+                case 'shake':
+                    $hg->setValue($this->_peerId, 1, 'SHAKE', TRUE);
                     break;
                 default:
                     break;

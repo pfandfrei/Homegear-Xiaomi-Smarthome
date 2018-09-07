@@ -29,6 +29,7 @@ class MiConstants
     
     const MODEL_UNKNOWN         = '';
     const MODEL_GATEWAY         = 'gateway';            // 0x286c
+    const MODEL_SWITCH_AQ3      = 'lumi.sensor_switch.aq3';  // 0x2878
     const MODEL_MAGNET_AQ2      = 'sensor_magnet.aq2';  // 0x2879
     const MODEL_MAGNET          = 'magnet';             // 0x287a
     const MODEL_MOTION          = 'motion';             // 0x287b

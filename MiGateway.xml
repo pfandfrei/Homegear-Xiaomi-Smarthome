@@ -157,7 +157,7 @@ include '/var/lib/homegear/scripts/DeviceScripts/Xiaomi/MiSmartHome.php';
                     </casts>
                 </properties>
                 <logicalInteger>
-                    <minimumValue>300</minimumValue>
+                    <minimumValue>0</minimumValue>
                     <maximumValue>1300</maximumValue>
                 </logicalInteger>
                 <physicalInteger>

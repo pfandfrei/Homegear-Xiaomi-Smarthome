@@ -232,16 +232,16 @@ class MiCentral extends Threaded
                 }
                 if ($log_unknown)
                 {
-                    $this->error_log($response);
+                    $this->error_log($json);
                 }
             }
         }
         while (TRUE);
     }
     
-    private function error_log($response)
+    private function error_log($text)
     {
         $now = strftime('%Y-%m-%d %H:%M:%S');
-        error_log('UNKNOWN >> ' . $now . ' >>  ' . $response . PHP_EOL, 3, MiConstants::LOGFILE);
+        error_log('UNKNOWN >> ' . $now . ' >>  ' . $text . PHP_EOL, 3, MiConstants::LOGFILE);
     }
 }

@@ -170,6 +170,7 @@ class MiGateway extends Threaded
                         break;
                     case MiConstants::MODEL_SWITCH:
                     case MiConstants::MODEL_SWITCH_AQ2:
+                    case MiConstants::MODEL_SWITCH_AQ3:
                         $this->_devices[$deviceid] = new MiSwitch($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_SENSOR_HT:

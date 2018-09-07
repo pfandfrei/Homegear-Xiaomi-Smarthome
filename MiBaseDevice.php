@@ -33,7 +33,9 @@ abstract class MiBaseDevice extends Threaded
         {
             if ($this->setProperty($data, 'voltage'))
             {
-                $hg->setValue($this->_peerId, 0, 'VOLTAGE', intval($data->voltage));   
+                $this->_voltage = intval($data->voltage);
+                $hg->setValue($this->_peerId, 0, 'VOLTAGE', $this->_voltage);  
+                $hg->setValue($this->_peerId, 0, 'LOWBAT', $this->_voltage<2800);   
             }
         }
         catch (Exception $e)

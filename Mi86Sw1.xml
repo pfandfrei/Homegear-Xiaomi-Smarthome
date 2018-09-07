@@ -72,6 +72,20 @@
                     <operationType>store</operationType>
                 </physicalInteger>
             </parameter>
+            <parameter id="LOWBAT">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalBoolean/>
+                <physicalBoolean>
+                    <operationType>store</operationType>
+                </physicalBoolean>
+            </parameter>
         </variables>
         <variables id="custom_ch1_key">
             <parameter id="PRESS_SHORT">

@@ -1,5 +1,5 @@
 ## Xiaomi Smart Home - Homegear Interface
-V0.4.0 supports firmware version 1.4.1_148.0143
+V0.5.0 supports firmware version 1.4.1_157.0143
 
 supports Homegear 0.7.x 
 
@@ -47,6 +47,13 @@ All Xiaomi devices have to be added in MiHome app.
 - HUMIDITY shows curret humidity in %. It will be updated when value changes by more than 0,5%
 - TEMPERATURE shows current temperature in °C. It will be updated when value changes by more than 0,5°C
 
+**[Xiaomi Aqara Temperature Humidity Sensor](https://xiaomi-mi.com/sockets-and-sensors/aqara-temperature-and-humidity-sensor/) (MiWeatherV1)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- HUMIDITY shows curret humidity in %. It will be updated when value changes by more than 0,5%
+- TEMPERATURE shows current temperature in °C. It will be updated when value changes by more than 0,5°C
+- PRESSURE shows current pressure 
+
 **[Xiaomi Mi Smart Home Wireless Switch](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mi-wireless-switch/) (MiSwitch)**
 
 - VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
@@ -64,6 +71,17 @@ All Xiaomi devices have to be added in MiHome app.
 
 - VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
 - MOTION is set true if motion is detected. Value is set not more than once a minute
+
+**[Xiaomi Aqara Window Door Sensor](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-aqara-window-door-sensor/) (MiMagnetAq2)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- STATE (OPEN: sensor is opened, CLOSED: sensor is closed, UNKNOWN: state is not known e.g. after power on)
+
+**[Xiaomi Smart Home Aqara Human Body Sensor](https://xiaomi-mi.com/sockets-and-sensors/aqara-human-body-sensor/) (MiMotion)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- MOTION is set true if motion is detected. Value is set not more than once a minute
+- ILLUMINATION ambient light
 
 ## untested, but should work ##
 **[Xiaomi Aqara Smart Light Control](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-aqara-smart-light-control-set/) (Mi86Sw1/Mi86Sw2)**
@@ -85,7 +103,7 @@ All Xiaomi devices have to be added in MiHome app.
 - LOAD_POWER actually consumed power in W
 - POWER_CONSUMED sum of consumed electrical power in kWh
 
-**Xiaomi Aqara Water Leak Sensor (MiWLeakAq1)**
+**[Xiaomi Aqara Water Leak Sensor](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mijia-aqara-water-sensor/) (MiWLeakAq1)**
 
 - LEAK is set to true if water is detected
 
@@ -106,36 +124,27 @@ All Xiaomi devices have to be added in MiHome app.
 - VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
 - ALARM (Release alarm/Fire alarm/Analog alarm/Battery fault alarm/Sensitivity fault alarm/IIC communication failure)
 
-**Xiaomi MiJia Honeywell Natural Gas Detector (MiNatGas)**
+**[Xiaomi MiJia Honeywell Natural Gas Detector](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mijia-honeywell-gas-leak-detector-white/) (MiNatGas)**
 
 - ALARM (Release alarm/Fire alarm/Analog alarm/Sensitivity fault alarm/IIC communication failure)
 
-**Xiaomi Aqara Temperature Humidity Sensor (MiWeatherV1)**
-
-- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
-- HUMIDITY shows curret humidity in %. It will be updated when value changes by more than 0,5%
-- TEMPERATURE shows current temperature in °C. It will be updated when value changes by more than 0,5°C
-- PRESSURE shows current pressure 
-
-**Xiaomi Aqara Smart Wireless Switch (MiSwitchAq2)**
+**[Xiaomi Aqara Smart Wireless Switch](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-aqara-smart-wireless-switch/) (MiSwitchAq2)**
 
 - VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
 - PRESS_SHORT is set when button is clicked 
 - PRESS_LONG is set when button is longer pressed and hold 
 - PRESS_LONG_RELEASE is set when longer pressed button is released
 - PRESS_DOUBLE is set when button is double clicked
+
+**Xiaomi Aqara Smart Wireless Switch (MiSwitchAq3)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- PRESS_SHORT is set when button is clicked 
+- PRESS_LONG is set when button is longer pressed and hold 
+- PRESS_LONG_RELEASE is set when longer pressed button is released
+- PRESS_DOUBLE is set when button is double clicked
+- SHAKE is set when button is moved (shaked)
   
-**Xiaomi Aqara Window Door Sensor (MiMagnetAq2)**
-
-- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
-- STATE (OPEN: sensor is opened, CLOSED: sensor is closed, UNKNOWN: state is not known e.g. after power on)
-
-**Xiaomi Smart Home Aqara Human Body Sensor (MiMotion)**
-
-- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
-- MOTION is set true if motion is detected. Value is set not more than once a minute
-- ILLUMINATION ambient light
-
 ## not implemented ##
 
 **[Xiaomi Aqara Smart Curtain Controller](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-aqara-smart-curtain-controller-white/)**
