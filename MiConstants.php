@@ -40,6 +40,7 @@ class MiConstants
     const MODEL_SENSOR_HT       = 'sensor_ht';          // 0x288c
     const MODEL_WEATHER_V1      = 'weather.v1';         // 0x288d
     const MODEL_CUBE            = 'cube';               // 0x28bc
+    const MODEL_CUBE_AQGL01     = 'sensor_cube.aqgl01'; // 0x28bc
     const MODEL_CTRL_NEUTRAL1   = 'ctrl_neutral1';      // 0x28c0
     const MODEL_86SW1           = '86sw1';              // 0x28c1
     const MODEL_CTRL_LN1        = 'ctrl_ln1';           // 0x28c2

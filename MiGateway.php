@@ -178,6 +178,7 @@ class MiGateway extends Threaded
                         $this->_devices[$deviceid] = new MiSensorHT($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_CUBE:
+                    case MiConstants::MODEL_CUBE_AQGL01:
                         $this->_devices[$deviceid] = new MiCube($data);
                         break;
                     case MiConstants::MODEL_MAGNET:
