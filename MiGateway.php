@@ -1,7 +1,7 @@
 <?php
 /*
  * Homegear Xiaomi Smarthome V0.1 for homegear 0.7.x
- * (c) Frank Motzkau 2017
+ * (c) Frank Motzkau 2018
  */
 
 include_once 'MiConstants.php';
@@ -13,6 +13,7 @@ include_once 'MiMagnet.php';
 include_once 'MiMotion.php';
 include_once 'MiSensorHT.php';
 include_once 'MiSwitch.php';
+include_once 'MiVibration.php';
 include_once 'MiWLeakAq1.php';
 
 
@@ -207,6 +208,12 @@ class MiGateway extends Threaded
                         break;
                     case MiConstants::MODEL_WLEAK_AQ1:
                         $this->_devices[$deviceid] = new MiWLeakAq1($data);
+                        break;
+                    case MiConstants::MODEL_VIBRATION:
+                        $this->_devices[$deviceid] = new MiVibration($data);
+                        break;
+                    default:
+                        $this->debug_log('unknown device: '.$deviceinfo->model);
                         break;
                 }
             }
