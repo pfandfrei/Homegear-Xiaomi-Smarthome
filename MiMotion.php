@@ -22,7 +22,8 @@ class MiMotion extends MiBaseDevice
             case MiConstants::MODEL_MOTION:
                 $this->_type_id = 0x287b;
                 break;
-            case MiConstants::MODEL_MOTION_AQ2:
+            case MiConstants::MODEL_SENSOR_MOTION:
+            case MiConstants::MODEL_SENSOR_MOTION_AQ2:
                 $this->_type_id = 0x287e;
                 break;
             default:

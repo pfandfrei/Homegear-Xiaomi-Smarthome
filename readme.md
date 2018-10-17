@@ -1,5 +1,5 @@
 ## Xiaomi Smart Home - Homegear Interface
-V0.5.0 supports firmware version 1.4.1_157.0143
+V0.5.1 supports firmware version 1.4.1_157.0143
 
 supports Homegear 0.7.x 
 
@@ -83,6 +83,14 @@ All Xiaomi devices have to be added in MiHome app.
 - VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
 - MOTION is set true if motion is detected. Value is set not more than once a minute
 - ILLUMINATION ambient light
+
+**Aqara Vibration Sensor (MiVibration)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- VIBRATE is set true if vibration is detected. Value is set not more than once a minute
+- FREE_FALL is set true if free fall (drop of more than 7cm) is detected. Value is set not more than once a minute
+- TILT is set true if tilt is detected. Value is set not more than once a minute
+
 
 ## untested, but should work ##
 **[Xiaomi Aqara Smart Light Control](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-aqara-smart-light-control-set/) (Mi86Sw1/Mi86Sw2)**

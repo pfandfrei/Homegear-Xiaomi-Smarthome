@@ -19,26 +19,34 @@ class MiGenericSwitch extends MiBaseDevice
         switch ($model)
         {
             case MiConstants::MODEL_CTRL_NEUTRAL1:
+            case MiConstants::MODEL_CTRL_NEUTRAL1_AQ1:
                 $this->_type_id = 0x28c0;
                 $this->_channels = 1;
                 break;
             case MiConstants::MODEL_86SW1:
+            case MiConstants::MODEL_SENSOR_86SW1:
+            case MiConstants::MODEL_SENSOR_86SW1_AQ1:
                 $this->_type_id = 0x28c1;
                 $this->_channels = 1;
                 break;
             case MiConstants::MODEL_CTRL_LN1:
+            case MiConstants::MODEL_CTRL_LN1_AQ1:
                 $this->_type_id = 0x28c2;
                 $this->_channels = 1;
                 break;
             case MiConstants::MODEL_CTRL_NEUTRAL2:
+            case MiConstants::MODEL_CTRL_NEUTRAL2_AQ1:
                 $this->_type_id = 0x28d0;
                 $this->_channels = 2;
                 break;
             case MiConstants::MODEL_86SW2:
+            case MiConstants::MODEL_SENSOR_86SW2:
+            case MiConstants::MODEL_SENSOR_86SW2_AQ1:
                 $this->_type_id = 0x28d1;
                 $this->_channels = 2;
                 break;
             case MiConstants::MODEL_CTRL_LN2:
+            case MiConstants::MODEL_CTRL_LN2_AQ1:
                 $this->_type_id = 0x28d2;
                 $this->_channels = 2;
                 break;

@@ -21,6 +21,7 @@ class MiSwitch extends MiBaseDevice
                 $this->_type_id = 0x287c;
                 break;
             case MiConstants::MODEL_SWITCH_AQ2:
+            case MiConstants::MODEL_REMOTE_B1ACN01:
                 $this->_type_id = 0x287d;
                 break;
             case MiConstants::MODEL_SWITCH_AQ3:

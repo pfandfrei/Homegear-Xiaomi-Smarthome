@@ -37,6 +37,8 @@ abstract class MiBaseDevice extends Threaded
                 $hg->setValue($this->_peerId, 0, 'VOLTAGE', $this->_voltage);  
                 $hg->setValue($this->_peerId, 0, 'LOWBAT', $this->_voltage<2800);   
             }
+            // finally update heartbeat timestamp
+            $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
         }
         catch (Exception $e)
         {

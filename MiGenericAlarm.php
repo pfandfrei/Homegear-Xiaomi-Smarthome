@@ -19,9 +19,11 @@ class MiGenericAlarm extends MiBaseDevice
         switch ($model)
         {
             case MiConstants::MODEL_SMOKE:
+            case MiConstants::MODEL_SENSOR_SMOKE:
                 $this->_type_id = 0x28e0;
                 break;
             case MiConstants::MODEL_NATGAS:
+            case MiConstants::MODEL_SENSOR_NATGAS:
                 $this->_type_id = 0x28e1;
                 break;
             default:

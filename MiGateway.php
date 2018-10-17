@@ -172,6 +172,7 @@ class MiGateway extends Threaded
                     case MiConstants::MODEL_SWITCH:
                     case MiConstants::MODEL_SWITCH_AQ2:
                     case MiConstants::MODEL_SWITCH_AQ3:
+                    case MiConstants::MODEL_REMOTE_B1ACN01:
                         $this->_devices[$deviceid] = new MiSwitch($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_SENSOR_HT:
@@ -179,37 +180,55 @@ class MiGateway extends Threaded
                         $this->_devices[$deviceid] = new MiSensorHT($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_CUBE:
-                    case MiConstants::MODEL_CUBE_AQGL01:
+                    case MiConstants::MODEL_SENSOR_CUBE:
+                    case MiConstants::MODEL_SENSOR_CUBE_AQGL01:
                         $this->_devices[$deviceid] = new MiCube($data);
                         break;
                     case MiConstants::MODEL_MAGNET:
-                    case MiConstants::MODEL_MAGNET_AQ2:
+                    case MiConstants::MODEL_SENSOR_MAGNET:
+                    case MiConstants::MODEL_SENSOR_MAGNET_AQ2:
                         $this->_devices[$deviceid] = new MiMagnet($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_MOTION:
-                    case MiConstants::MODEL_MOTION_AQ2:
+                    case MiConstants::MODEL_SENSOR_MOTION:
+                    case MiConstants::MODEL_SENSOR_MOTION_AQ2:
                         $this->_devices[$deviceid] = new MiMotion($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_CTRL_NEUTRAL1:
+                    case MiConstants::MODEL_CTRL_NEUTRAL1_AQ1:
                     case MiConstants::MODEL_86SW1:
+                    case MiConstants::MODEL_SENSOR_86SW1:
+                    case MiConstants::MODEL_SENSOR_86SW1_AQ1:
+                    case MiConstants::MODEL_REMOTE_B186ACN01:
                     case MiConstants::MODEL_CTRL_LN1:
+                    case MiConstants::MODEL_CTRL_LN1_AQ1:
                     case MiConstants::MODEL_CTRL_NEUTRAL2:
+                    case MiConstants::MODEL_CTRL_NEUTRAL2_AQ1:
                     case MiConstants::MODEL_86SW2:
+                    case MiConstants::MODEL_SENSOR_86SW2:
+                    case MiConstants::MODEL_SENSOR_86SW2_AQ1:
+                    case MiConstants::MODEL_REMOTE_B286ACN01:
                     case MiConstants::MODEL_CTRL_LN2:
+                    case MiConstants::MODEL_CTRL_LN2_AQ1:
                         $this->_devices[$deviceid] = new MiGenericSwitch($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_SMOKE:
+                    case MiConstants::MODEL_SENSOR_SMOKE:
                     case MiConstants::MODEL_NATGAS:
+                    case MiConstants::MODEL_SENSOR_NATGAS:
                         $this->_devices[$deviceid] = new MiGenericAlarm($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_PLUG:
                     case MiConstants::MODEL_86PLUG:
+                    case MiConstants::MODEL_CTRL_86PLUG:
+                    case MiConstants::MODEL_CTRL_86PLUG_AQ1:
                         $this->_devices[$deviceid] = new MiGenericSocket($data, $deviceinfo->model);
                         break;
                     case MiConstants::MODEL_WLEAK_AQ1:
                         $this->_devices[$deviceid] = new MiWLeakAq1($data);
                         break;
                     case MiConstants::MODEL_VIBRATION:
+                    case MiConstants::MODEL_LUMI_VIBRATION_AQ1:
                         $this->_devices[$deviceid] = new MiVibration($data);
                         break;
                     default:
@@ -329,39 +348,48 @@ class MiGateway extends Threaded
     
     public function updateData($hg, $response)
     {
-        $data = json_decode($response->data);
-        if ($this->setProperty($data, 'rgb'))
+        try
         {
-            $rgb = $data->rgb & 0xffffff;
-            $brightness = $data->rgb >> 24;
-            if (0 < $brightness)
+            $data = json_decode($response->data);
+            if ($this->setProperty($data, 'rgb'))
             {
-                if ($this->_rgb != $data->rgb)
+                $rgb = $data->rgb & 0xffffff;
+                $brightness = $data->rgb >> 24;
+                if (0 < $brightness)
                 {
-                    $this->_rgb = $data->rgb;
-                    $hg->setValue($this->_peerId, 1, 'RGB_OLD', $data->rgb);
-                    $hg->setValue($this->_peerId, 1, 'RGB', $rgb);
-                    $hg->setValue($this->_peerId, 1, 'BRIGHTNESS', $brightness);
+                    if ($this->_rgb != $data->rgb)
+                    {
+                        $this->_rgb = $data->rgb;
+                        $hg->setValue($this->_peerId, 1, 'RGB_OLD', $data->rgb);
+                        $hg->setValue($this->_peerId, 1, 'RGB', $rgb);
+                        $hg->setValue($this->_peerId, 1, 'BRIGHTNESS', $brightness);
+                    }
+                    if (!$this->_enable)
+                    {
+                        $hg->setValue($this->_peerId, 1, 'ENABLE', TRUE);
+                    }
                 }
-                if (!$this->_enable)
+                else
                 {
-                    $hg->setValue($this->_peerId, 1, 'ENABLE', TRUE);
+                    if ($this->_enable)
+                    {
+                        // do not change last rgb value if light is turned off
+                        $hg->setValue($this->_peerId, 1, 'ENABLE', FALSE);
+                    }
                 }
             }
-            else
+            if ($this->setProperty($data, 'illumination'))
             {
-                if ($this->_enable)
-                {
-                    // do not change last rgb value if light is turned off
-                    $hg->setValue($this->_peerId, 1, 'ENABLE', FALSE);
-                }
+                $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->illumination); 
             }
+            $this->setProperty($response, 'token');
+            // finally update heartbeat timestamp
+            $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
         }
-        if ($this->setProperty($data, 'illumination'))
+        catch (Exception $e)
         {
-            $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->illumination); 
+            $this->debug_log("ERROR MiGateway::updateData: ".$e->getMessage());
         }
-        $this->setProperty($response, 'token');
     }
     
     protected function setProperty($mixed, $property)

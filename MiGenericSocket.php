@@ -29,6 +29,8 @@ class MiGenericSocket extends MiBaseDevice
                 $this->_type_id = 0x28f0;
                 break;
             case MiConstants::MODEL_86PLUG:
+            case MiConstants::MODEL_CTRL_86PLUG:
+            case MiConstants::MODEL_CTRL_86PLUG_AQ1:
                 $this->_type_id = 0x28f1;
                 break;
             default:
