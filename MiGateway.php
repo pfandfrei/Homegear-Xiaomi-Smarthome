@@ -388,7 +388,7 @@ class MiGateway extends Threaded
         }
         catch (Exception $e)
         {
-            $this->debug_log("ERROR MiGateway::updateData: ".$e->getMessage());
+            $this->debug_log("ERROR MiGateway::updateData: ".$e->getTraceAsString());
         }
     }
     

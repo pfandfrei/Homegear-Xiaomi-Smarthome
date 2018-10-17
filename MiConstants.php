@@ -65,6 +65,7 @@ class MiConstants
     const MODEL_SENSOR_86SW2        = 'sensor_86sw2';           // 0x28d1
     const MODEL_SENSOR_86SW2_AQ1    = 'sensor_86sw2.aq1';       // 0x28d1
     const MODEL_REMOTE_B286ACN01    = 'remote.b286acn01';       // 0x28c1
+    const MODEL_CTRL_LN2            = 'ctrl_ln2';               // 0x28d2
     const MODEL_CTRL_LN2_AQ1        = 'ctrl_ln2.aq1';           // 0x28d2
     
     const MODEL_SMOKE               = 'smoke';                  // 0x28e0

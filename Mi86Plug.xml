@@ -16,6 +16,7 @@
         <function channel="0" type="SETTINGS" channelCount="1">
             <properties/>
             <configParameters>custom_ch0_master</configParameters>
+            <variables>custom_ch0_values</variables>
         </function>
         <function channel="1" type="READINGS" channelCount="1">
             <properties/>
@@ -41,6 +42,8 @@
                     <operationType>config</operationType>
                 </physicalString>
             </parameter>
+        </configParameters>
+        <variables id="custom_ch0_values">
             <parameter id="HEARTBEAT">
                 <properties>
                     <writeable>true</writeable>
@@ -55,7 +58,7 @@
                     <operationType>store</operationType>
                 </physicalInteger>
             </parameter> 
-        </configParameters>
+        </variables>
         <variables id="custom_ch1_readings">
             <parameter id="STATE">
                 <properties>
