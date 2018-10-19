@@ -42,6 +42,8 @@
                     <operationType>config</operationType>
                 </physicalString>
             </parameter>
+        </configParameters>
+        <variables id="custom_ch0_values">
             <parameter id="HEARTBEAT">
                 <properties>
                     <writeable>false</writeable>
@@ -56,8 +58,6 @@
                     <operationType>store</operationType>
                 </physicalInteger>
             </parameter> 
-        </configParameters>
-        <variables id="custom_ch0_values">
             <parameter id="VOLTAGE">
                 <properties>
                     <writeable>true</writeable>
