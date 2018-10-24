@@ -107,19 +107,23 @@ if (!$peerId)
 
 $central = new MiCentral();
 $sharedData = new SharedData($scriptId, $peerId);
-// discover all gateways and devices
-$sharedData->gateways = $central->discover();
+    
 if ($peerId > 0)
-{
+{    
     // create a socket to communicate with gateway
     $sharedData->socket_recv = $central->createSocket();  
-    // handle homegear events
-    $thread = new EventThread($sharedData);
-    $thread->start();
-    // handle gateway communication
-    $central->run();
-    $thread->join();
-    socket_close($sharedData->socket_recv);
+    if (FALSE !== $sharedData->socket_recv)
+    {
+        // discover all gateways and devices
+        $sharedData->gateways = $central->discover();
+        // handle homegear events
+        $thread = new EventThread($sharedData);
+        $thread->start();
+        // handle gateway communication
+        $central->run();
+        $thread->join();
+        socket_close($sharedData->socket_recv);
+    }
 }
 else
 {
@@ -131,6 +135,7 @@ else
         echo "### maybe it will work, but it is untested\r\n";
         echo "### please update to Homegear 0.7.x or newer\033[0m\r\n";
     }
+    $central->discover();
     echo "\r\n\r\nfound the following devices:\r\n";
     $central->listDevices();
     echo "\r\nInstallation completed!\r\n\r\n";

@@ -175,8 +175,8 @@ class MiCentral extends Threaded
             die("$errstr ($errno)");
         }
         $res = socket_set_option($this->_socket, IPPROTO_IP, MCAST_JOIN_GROUP, array('group' => MiConstants::MULTICAST_ADDRESS, 'interface' => 0));
-        $res = socket_bind($this->_socket, '0.0.0.0', 9898) or die("Could not bind");
-        return $this->_socket;
+        $res = socket_bind($this->_socket, '0.0.0.0', 9898);
+        return ($res===FALSE) ? FALSE : $this->_socket;
     }
 
     public function run()
