@@ -44,8 +44,7 @@ class MiCube extends MiBaseDevice
         }
         if (property_exists($data, 'status'))
         {
-            $status = json_decode($data->status);
-            switch ($status)
+            switch ($data->status)
             {
                 case 'flip90':
                     $hg->setValue($this->_peerId, 1, 'FLIP90', TRUE);
