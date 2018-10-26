@@ -26,8 +26,7 @@ class MiCube extends MiBaseDevice
         
         if (property_exists($data, 'rotate'))
         {
-            $rotate = json_decode($data->rotate);
-            $args = explode(',', $rotate);
+            $args = explode(',', $data->rotate);
             $angle = $args[0];
             $hg->setValue($this->_peerId, 2, 'ROTATE', intval($angle));
             if (intval($angle) < 0)
