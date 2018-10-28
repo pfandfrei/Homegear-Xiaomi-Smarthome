@@ -96,6 +96,15 @@ class EventThread extends Thread
 
 }
 
+    
+function MiErrorHandler($errno, $errstr, $errfile, $errline) 
+{
+    $now = strftime('%Y-%m-%d %H:%M:%S');
+    error_log('ERROR >> ' . $now . ' >>  ' . $errno.' '.$errstr.' '.$errfile.' '.$errline . PHP_EOL, 3, MiConstants::LOGFILE);
+    return false;
+
+}
+
 $hg = new \Homegear\Homegear();
 $peerId = (integer) $argv[0];
 $scriptId = $hg->getScriptId();
@@ -114,6 +123,8 @@ if ($peerId > 0)
     $sharedData->socket_recv = $central->createSocket();  
     if (FALSE !== $sharedData->socket_recv)
     {
+        $old_error_handler = set_error_handler("MiErrorHandler");
+        
         // discover all gateways and devices
         $sharedData->gateways = $central->discover();
         // handle homegear events
@@ -123,6 +134,8 @@ if ($peerId > 0)
         $central->run();
         $thread->join();
         socket_close($sharedData->socket_recv);
+        
+        set_error_handler($old_error_handler);
     }
 }
 else
