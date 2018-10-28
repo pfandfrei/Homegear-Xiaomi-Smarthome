@@ -386,19 +386,34 @@ class MiGateway extends Threaded
             // finally update heartbeat timestamp
             $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
         }
+        catch (\Homegear\HomegearException $e)
+        {
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__." (".$e->getCode()." ".$e->getMessage().")");
+        }
         catch (Exception $e)
         {
-            $this->debug_log("ERROR MiGateway::updateData: ".$e->getTraceAsString());
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__." (".$e->getTraceAsString().")");
         }
     }
     
     protected function setProperty($mixed, $property)
     {
         $result = FALSE;
-        if (property_exists($mixed, $property))
+        try
         {
-            $this->{'_'.$property} = $mixed->$property;
-            $result = TRUE;
+            if (property_exists($mixed, $property))
+            {
+                $this->{'_'.$property} = $mixed->$property;
+                $result = TRUE;
+            }
+        }
+        catch (\Homegear\HomegearException $e)
+        {
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getCode()." ".$e->getMessage().")");
+        }
+        catch (Exception $e)
+        {
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getTraceAsString().")");
         }
         
         return $result;
@@ -407,18 +422,29 @@ class MiGateway extends Threaded
     public function sendCommand($socket, $cmd, $ip, $port, $ack)
     {
         $result = FALSE;
-        $this->debug_log($cmd);
-        socket_sendto($socket, $cmd, strlen($cmd), 0, $ip, $port);
-        $json = null;
-        socket_recvfrom($socket, $json, 1024, MSG_WAITALL, $clientIP, $clientPort);
-        if (!is_null($json))
+        try
         {
-            $this->debug_log($json);
-            $response = json_decode($json); 
-            if ($response->cmd === $ack)
+            $this->debug_log($cmd);
+            socket_sendto($socket, $cmd, strlen($cmd), 0, $ip, $port);
+            $json = null;
+            socket_recvfrom($socket, $json, 1024, MSG_WAITALL, $clientIP, $clientPort);
+            if (!is_null($json))
             {
-                $result = json_decode($json);
+                $this->debug_log($json);
+                $response = json_decode($json); 
+                if ($response->cmd === $ack)
+                {
+                    $result = json_decode($json);
+                }
             }
+        }
+        catch (\Homegear\HomegearException $e)
+        {
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getCode()." ".$e->getMessage().")");
+        }
+        catch (Exception $e)
+        {
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getTraceAsString().")");
         }
         
         return $result;
@@ -436,10 +462,21 @@ class MiGateway extends Threaded
     public function updateDevice($hg, $sid, $data)
     {
         $success = FALSE;
-        if (array_key_exists($sid, $this->_devices))
+        try
         {
-            $this->_devices[$sid]->updateData($hg, $data);
-            $success = TRUE;
+            if (array_key_exists($sid, $this->_devices))
+            {
+                $this->_devices[$sid]->updateData($hg, $data);
+                $success = TRUE;
+            }
+        }
+        catch (\Homegear\HomegearException $e)
+        {
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getCode()." ".$e->getMessage().")");
+        }
+        catch (Exception $e)
+        {
+            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getTraceAsString().")");
         }
         return $success;
     }

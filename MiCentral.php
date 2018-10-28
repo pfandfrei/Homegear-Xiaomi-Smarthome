@@ -158,12 +158,21 @@ class MiCentral extends Threaded
     private function updateDevice($hg, $sid, $data)
     {
         $result = FALSE;
-        foreach ($this->_gateways as $gateway)
+        try
         {
-            if ($gateway->updateDevice($hg, $sid, $data))
+            foreach ($this->_gateways as $gateway)
             {
-                $result = $gateway;
+                if ($gateway->updateDevice($hg, $sid, $data))
+                {
+                    $result = $gateway;
+                }
             }
+        }
+        catch (\Homegear\HomegearException $ex)
+        {
+        }
+        catch (Exception $e)
+        {
         }
         return $result;
     }
@@ -187,53 +196,62 @@ class MiCentral extends Threaded
 
         do
         {
-            $json = null;
-            socket_recvfrom($socket_recv, $json, 1024, MSG_WAITALL, $from, $port);
-            if (!is_null($json))
+            try
             {
-                $log_unknown = TRUE;
-                $response = json_decode($json);
-                $data = json_decode($response->data);
-                switch ($response->cmd)
+                $json = null;
+                socket_recvfrom($socket_recv, $json, 1024, MSG_WAITALL, $from, $port);
+                if (!is_null($json))
                 {
-                    case MiConstants::HEARTBEAT:
-                    case MiConstants::REPORT:
-                    case MiConstants::ACK_READ:
-                        if ($response->model == MiConstants::MODEL_GATEWAY)
-                        {
-                            foreach ($this->_gateways as $gateway)
+                    $log_unknown = TRUE;
+                    $response = json_decode($json);
+                    $data = json_decode($response->data);
+                    switch ($response->cmd)
+                    {
+                        case MiConstants::HEARTBEAT:
+                        case MiConstants::REPORT:
+                        case MiConstants::ACK_READ:
+                            if ($response->model == MiConstants::MODEL_GATEWAY)
                             {
-                                if ($gateway->getSid() == $response->sid)
+                                foreach ($this->_gateways as $gateway)
+                                {
+                                    if ($gateway->getSid() == $response->sid)
+                                    {
+                                        $log_unknown = FALSE;
+                                        $gateway->debug_log($json);
+                                        if (property_exists($data, 'error'))
+                                        {
+                                            // todo: error handling
+                                        }
+                                        $gateway->updateData($hg, $response);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (FALSE !== ($gateway = $this->updateDevice($hg, $response->sid, $data)))
                                 {
                                     $log_unknown = FALSE;
                                     $gateway->debug_log($json);
-                                    if (property_exists($data, 'error'))
-                                    {
-                                        // todo: error handling
-                                    }
-                                    $gateway->updateData($hg, $response);
-                                    break;
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (FALSE !== ($gateway = $this->updateDevice($hg, $response->sid, $data)))
-                            {
-                                $log_unknown = FALSE;
-                                $gateway->debug_log($json);
-                            }
-                        }
-                        break;
-                    case MiConstants::ACK_WRITE:
-                        // todo error handling 
-                        $log_unknown = FALSE;
-                        break;
+                            break;
+                        case MiConstants::ACK_WRITE:
+                            // todo error handling 
+                            $log_unknown = FALSE;
+                            break;
+                    }
+                    if ($log_unknown)
+                    {
+                        $this->error_log($json);
+                    }
                 }
-                if ($log_unknown)
-                {
-                    $this->error_log($json);
-                }
+            }
+            catch (\Homegear\HomegearException $ex)
+            {
+            }
+            catch (Exception $e)
+            {
             }
         }
         while (TRUE);

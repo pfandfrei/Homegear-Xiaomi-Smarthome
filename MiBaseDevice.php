@@ -40,6 +40,9 @@ abstract class MiBaseDevice extends Threaded
             // finally update heartbeat timestamp
             $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
         }
+        catch (\Homegear\HomegearException $ex)
+        {
+        }
         catch (Exception $e)
         {
         }
@@ -59,10 +62,19 @@ abstract class MiBaseDevice extends Threaded
     protected function setProperty($mixed, $property)
     {
         $result = FALSE;
-        if (property_exists($mixed, $property))
+        try
         {
-            $this->{'_'.$property} = $mixed->$property;
-            $result = TRUE;
+            if (property_exists($mixed, $property))
+            {
+                $this->{'_'.$property} = $mixed->$property;
+                $result = TRUE;
+            }
+        }
+        catch (\Homegear\HomegearException $ex)
+        {
+        }
+        catch (Exception $e)
+        {
         }
         
         return $result;

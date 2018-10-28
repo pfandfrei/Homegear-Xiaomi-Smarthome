@@ -12,18 +12,27 @@ abstract class MiBaseClass
     protected function sendCommand($socket, $cmd, $ip, $port, $ack)
     {
         $result = FALSE;
-        echo $cmd."\r\n";
-        socket_sendto($socket, $cmd, strlen($cmd), 0, $ip, $port);
-        $json = null;
-        socket_recvfrom($socket, $json, 1024, MSG_WAITALL, $clientIP, $clientPort);
-        if (!is_null($json))
+        try
         {
-            echo $json."\r\n\r\n";
-            $response = json_decode($json); 
-            if ($response->cmd === $ack)
+            echo $cmd."\r\n";
+            socket_sendto($socket, $cmd, strlen($cmd), 0, $ip, $port);
+            $json = null;
+            socket_recvfrom($socket, $json, 1024, MSG_WAITALL, $clientIP, $clientPort);
+            if (!is_null($json))
             {
-                $result = json_decode($json);
+                echo $json."\r\n\r\n";
+                $response = json_decode($json); 
+                if ($response->cmd === $ack)
+                {
+                    $result = json_decode($json);
+                }
             }
+        }
+        catch (\Homegear\HomegearException $ex)
+        {
+        }
+        catch (Exception $e)
+        {
         }
         
         return $result;
@@ -32,10 +41,19 @@ abstract class MiBaseClass
     protected function setProperty(&$param, $mixed, $property)
     {
         $result = FALSE;
-        if (property_exists($mixed, $property))
+        try
         {
-            $param = $mixed->$property;
-            $result = TRUE;
+            if (property_exists($mixed, $property))
+            {
+                $param = $mixed->$property;
+                $result = TRUE;
+            }
+        }
+        catch (\Homegear\HomegearException $ex)
+        {
+        }
+        catch (Exception $e)
+        {
         }
         
         return $result;
