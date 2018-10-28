@@ -10,7 +10,7 @@
         </device>
     </supportedDevices>
     <runProgram>
-        <startType>permanent</startType>
+        <startType>once</startType>
 		<script>
 <![CDATA[<?php
 include '/var/lib/homegear/scripts/DeviceScripts/Xiaomi/MiSmartHome.php';
