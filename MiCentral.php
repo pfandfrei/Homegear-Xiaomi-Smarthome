@@ -20,18 +20,19 @@ else
 
 include_once 'MiConstants.php';
 include_once 'MiGateway.php';
+include_once 'MiLogger.php';
 
 class MiCentral extends Threaded
 {
     const FAMILY_ID = 254;  // miscellaneous device
 
-    private $_gateways;
+    private $_sharedData;
     private $_socket;
     private $_oldversion;
 
-    public function __construct()
+    public function __construct($sharedData)
     {
-        $this->_gateways = new StackableArray();
+        $this->_sharedData = $sharedData;
         
         $hg = new \Homegear\Homegear();
         $version = $hg->getVersion();
@@ -51,30 +52,30 @@ class MiCentral extends Threaded
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, true);
         socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => '0'));
         socket_sendto($socket, MiConstants::CMD_WHOIS, strlen(MiConstants::CMD_WHOIS), 0, MiConstants::MULTICAST_ADDRESS, MiConstants::SERVER_PORT);
+        MiLogger::Instance()->debug_log(MiConstants::CMD_WHOIS);
         do
         {
             $data = null;
             socket_recvfrom($socket, $data, 1024, MSG_WAITALL, $from, $port);
             if (!is_null($data))
             {
+                MiLogger::Instance()->debug_log($data);
                 $response = json_decode($data);
                 if (($response->cmd == MiConstants::ACK_IAM)
                     && ($response->model == MiConstants::MODEL_GATEWAY))
                 {
-                    $this->_gateways[] = new MiGateway($response);
+                    $this->_sharedData->gateways[] = new MiGateway($response);
                 }
             }
         }
         while (!is_null($data));
         socket_close($socket);
 
-        foreach ($this->_gateways as $gateway)
+        foreach ($this->_sharedData->gateways as $gateway)
         {
             $gateway->get_id_list($hg);
             $this->createDevices($hg, $gateway);
         }
-
-        return $this->_gateways;
     }
 
     public function listDevices()
@@ -84,7 +85,7 @@ class MiCentral extends Threaded
         echo "─────────┼───────────────────────────┼───────────────┼──────┼───────────────────────────\r\n"; 
         
         $hg = new \Homegear\Homegear();
-        foreach ($this->_gateways as $gateway)
+        foreach ($this->_sharedData->gateways as $gateway)
         {
             foreach ($gateway->getDevicelist() as $sid)
             {
@@ -160,19 +161,26 @@ class MiCentral extends Threaded
         $result = FALSE;
         try
         {
-            foreach ($this->_gateways as $gateway)
-            {
-                if ($gateway->updateDevice($hg, $sid, $data))
+            global $sharedData;
+            $this->_sharedData->synchronized(
+                function() use($sharedData, $hg, $sid, $data)
                 {
-                    $result = $gateway;
-                }
-            }
+                    foreach ($sharedData->gateways as $gateway)
+                    {
+                        if ($gateway->updateDevice($hg, $sid, $data))
+                        {
+                            $result = TRUE;
+                        }
+                    }
+                }, $this);
         }
-        catch (\Homegear\HomegearException $ex)
+        catch (\Homegear\HomegearException $e)
         {
+            MiLogger::Instance()->exception_log($e);
         }
         catch (Exception $e)
         {
+            MiLogger::Instance()->exception_log($e);
         }
         return $result;
     }
@@ -184,7 +192,7 @@ class MiCentral extends Threaded
             die("$errstr ($errno)");
         }
         $res = socket_set_option($this->_socket, IPPROTO_IP, MCAST_JOIN_GROUP, array('group' => MiConstants::MULTICAST_ADDRESS, 'interface' => 0));
-        $res = socket_bind($this->_socket, '0.0.0.0', 9898);
+        $res = @socket_bind($this->_socket, '0.0.0.0', 9898);
         return ($res===FALSE) ? FALSE : $this->_socket;
     }
 
@@ -205,6 +213,11 @@ class MiCentral extends Threaded
                     $log_unknown = TRUE;
                     $response = json_decode($json);
                     $data = json_decode($response->data);
+                    if (property_exists($data, 'error'))
+                    {
+                        // todo: error handling
+                    }
+                    
                     switch ($response->cmd)
                     {
                         case MiConstants::HEARTBEAT:
@@ -212,27 +225,30 @@ class MiCentral extends Threaded
                         case MiConstants::ACK_READ:
                             if ($response->model == MiConstants::MODEL_GATEWAY)
                             {
-                                foreach ($this->_gateways as $gateway)
-                                {
-                                    if ($gateway->getSid() == $response->sid)
+                                global $sharedData;
+                                $log_unknown = !$this->_sharedData->synchronized(
+                                    function() use($sharedData, $hg, $response, $data)
                                     {
-                                        $log_unknown = FALSE;
-                                        $gateway->debug_log($json);
-                                        if (property_exists($data, 'error'))
+                                        foreach ($sharedData->gateways as $gateway)
                                         {
-                                            // todo: error handling
+                                            if ($gateway->getSid() == $response->sid)
+                                            {
+                                                $log_unknown = FALSE;
+                                                $gateway->updateData($hg, $response);
+                                                return TRUE;
+                                            }
                                         }
-                                        $gateway->updateData($hg, $response);
-                                        break;
-                                    }
-                                }
+                                        return FALSE;
+                                    }, $this);
+                                MiLogger::Instance()->debug_log($json);
+                                    
                             }
                             else
                             {
-                                if (FALSE !== ($gateway = $this->updateDevice($hg, $response->sid, $data)))
+                                if (FALSE !== $this->updateDevice($hg, $response->sid, $data))
                                 {
                                     $log_unknown = FALSE;
-                                    $gateway->debug_log($json);
+                                    MiLogger::Instance()->debug_log($json);
                                 }
                             }
                             break;
@@ -243,23 +259,19 @@ class MiCentral extends Threaded
                     }
                     if ($log_unknown)
                     {
-                        $this->error_log($json);
+                        MiLogger::Instance()->unknown_log($json);
                     }
                 }
             }
-            catch (\Homegear\HomegearException $ex)
+            catch (\Homegear\HomegearException $e)
             {
+                MiLogger::Instance()->exception_log($e);
             }
             catch (Exception $e)
             {
+                MiLogger::Instance()->exception_log($e);
             }
         }
         while (TRUE);
-    }
-    
-    private function error_log($text)
-    {
-        $now = strftime('%Y-%m-%d %H:%M:%S');
-        error_log('UNKNOWN >> ' . $now . ' >>  ' . $text . PHP_EOL, 3, MiConstants::LOGFILE);
     }
 }

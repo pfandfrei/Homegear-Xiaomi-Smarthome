@@ -3,6 +3,7 @@
  * Homegear Xiaomi Smarthome V0.1 for homegear 0.7.x
  * (c) Frank Motzkau 2017
  */
+include_once 'MiLogger.php';
 
 abstract class MiBaseClass
 {      
@@ -28,11 +29,13 @@ abstract class MiBaseClass
                 }
             }
         }
-        catch (\Homegear\HomegearException $ex)
+        catch (\Homegear\HomegearException $e)
         {
+            MiLogger::Instance()->exception_log($e);
         }
         catch (Exception $e)
         {
+            MiLogger::Instance()->exception_log($e);
         }
         
         return $result;
@@ -49,11 +52,13 @@ abstract class MiBaseClass
                 $result = TRUE;
             }
         }
-        catch (\Homegear\HomegearException $ex)
+        catch (\Homegear\HomegearException $e)
         {
+            MiLogger::Instance()->exception_log($e);
         }
         catch (Exception $e)
         {
+            MiLogger::Instance()->exception_log($e);
         }
         
         return $result;

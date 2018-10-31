@@ -13,6 +13,8 @@ if (file_exists($basedir.'lib/Homegear/'))
 
 include_once 'MiConstants.php';
 include_once 'MiCentral.php';
+include_once 'MiLogger.php';
+
 class SharedData extends Threaded
 {
     private $scriptId = 0;
@@ -22,14 +24,18 @@ class SharedData extends Threaded
 
     public function __construct($scriptId, $peerId = 0)
     {
+        $this->gateways = new StackableArray();
         $this->scriptId = $scriptId;
         $this->peerId = $peerId;
+    }
+    
+    public function run()
+    {
     }
 }
 
 class EventThread extends Thread
 {
-
     const LOGFILE = '/var/log/homegear/mihome.log';
     
     private $sharedData;
@@ -48,28 +54,36 @@ class EventThread extends Thread
             return;
         }
         
-        foreach ($this->sharedData->gateways as $gateway)
-        {
-            $hg->subscribePeer(intval($gateway->getPeerId()));
-            foreach ($gateway->getDevicelist() as $sid)
-            {
-                if ($device = $gateway->getDevice($sid))
+        $this->sharedData->synchronized(
+            function() use($sharedData, $hg)
+            {            
+                foreach ($sharedData->gateways as $gateway)
                 {
-                    $hg->subscribePeer($device->getPeerId());
+                    $hg->subscribePeer(intval($gateway->getPeerId()));
+                    foreach ($gateway->getDevicelist() as $sid)
+                    {
+                        if ($device = $gateway->getDevice($sid))
+                        {
+                            $hg->subscribePeer($device->getPeerId());
+                        }
+                    }
                 }
-            }
-        }
+            }, $this);
         
         while (!$hg->shuttingDown())
         {
             $result = $hg->pollEvent();
             if ($result['TYPE'] == 'event')
             {
-                for ($i = 0; $i < count($this->sharedData->gateways); $i++)
-                {
-                    // Pass result to main thread
-                    $this->sharedData->gateways[$i]->updateEvent($hg, $result);
-                }
+                $this->sharedData->synchronized(
+                    function() use($sharedData, $hg, $result)
+                    {            
+                        foreach ($sharedData->gateways as $gateway)
+                        {
+                            // Pass result to main thread
+                            $gateway->updateEvent($hg, $result);
+                        }
+                    }, $this);
 
                 // Wake up main thread
                 $this->synchronized(function($thread)
@@ -79,30 +93,24 @@ class EventThread extends Thread
             }
             else if ($result['TYPE'] == 'updateDevice')
             {
-                for ($i = 0; $i < count($this->sharedData->gateways); $i++)
-                {
-                    // Pass result to main thread
-                    $this->sharedData->gateways[$i]->getParamset($hg, $result['CHANNEL']);
-                }                
+                $this->sharedData->synchronized(
+                    function() use($sharedData, $hg, $result)
+                    {            
+                        foreach ($sharedData->gateways as $gateway)
+                        {
+                            // Pass result to main thread
+                            $gateway->getParamset($hg, $result['CHANNEL']);
+                        }
+                    }, $this);    
             }
         }
     }
-
-    public function log($message)
-    {
-        $now = strftime('%Y-%m-%d %H:%M:%S');
-        error_log($now . ' >>  ' . $message . PHP_EOL, 3, MiConstants::LOGFILE);
-    }
-
 }
 
-    
 function MiErrorHandler($errno, $errstr, $errfile, $errline) 
 {
-    $now = strftime('%Y-%m-%d %H:%M:%S');
-    error_log('ERROR >> ' . $now . ' >>  ' . $errno.' '.$errstr.' '.$errfile.' '.$errline . PHP_EOL, 3, MiConstants::LOGFILE);
+    MiLogger::Instance()->error_log($errno.' '.$errstr.' '.$errfile.' '.$errline);
     return false;
-
 }
 
 $hg = new \Homegear\Homegear();
@@ -114,8 +122,8 @@ if (!$peerId)
     echo "#### auto-discovering devices ...   ####\r\n";
 }
 
-$central = new MiCentral();
 $sharedData = new SharedData($scriptId, $peerId);
+$central = new MiCentral($sharedData);
     
 if ($peerId > 0)
 {    
@@ -126,7 +134,7 @@ if ($peerId > 0)
         $old_error_handler = set_error_handler("MiErrorHandler");
         
         // discover all gateways and devices
-        $sharedData->gateways = $central->discover();
+        $central->discover();
         // handle homegear events
         $thread = new EventThread($sharedData);
         $thread->start();

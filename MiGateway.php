@@ -232,7 +232,7 @@ class MiGateway extends Threaded
                         $this->_devices[$deviceid] = new MiVibration($data);
                         break;
                     default:
-                        $this->debug_log('unknown device: '.$deviceinfo->model);
+                        MiLogger::Instance()->unknown_log('unknown device: '.$deviceinfo->model);
                         break;
                 }
             }
@@ -388,11 +388,11 @@ class MiGateway extends Threaded
         }
         catch (\Homegear\HomegearException $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__." (".$e->getCode()." ".$e->getMessage().")");
+            MiLogger::Instance()->exception_log($e);
         }
         catch (Exception $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__." (".$e->getTraceAsString().")");
+            MiLogger::Instance()->exception_log($e);
         }
     }
     
@@ -409,11 +409,10 @@ class MiGateway extends Threaded
         }
         catch (\Homegear\HomegearException $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getCode()." ".$e->getMessage().")");
+            MiLogger::Instance()->exception_log($e);
         }
         catch (Exception $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getTraceAsString().")");
         }
         
         return $result;
@@ -424,13 +423,13 @@ class MiGateway extends Threaded
         $result = FALSE;
         try
         {
-            $this->debug_log($cmd);
+            MiLogger::Instance()->debug_log($cmd);
             socket_sendto($socket, $cmd, strlen($cmd), 0, $ip, $port);
             $json = null;
             socket_recvfrom($socket, $json, 1024, MSG_WAITALL, $clientIP, $clientPort);
             if (!is_null($json))
             {
-                $this->debug_log($json);
+                MiLogger::Instance()->debug_log($json);
                 $response = json_decode($json); 
                 if ($response->cmd === $ack)
                 {
@@ -440,23 +439,14 @@ class MiGateway extends Threaded
         }
         catch (\Homegear\HomegearException $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getCode()." ".$e->getMessage().")");
+            MiLogger::Instance()->exception_log($e);
         }
         catch (Exception $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getTraceAsString().")");
+            MiLogger::Instance()->exception_log($e);
         }
         
         return $result;
-    }
-    
-    public function debug_log($message)
-    {
-        if ($this->_debug_level)
-        {
-            $now = strftime('%Y-%m-%d %H:%M:%S');
-            error_log($now . ' >>  ' . $message . PHP_EOL, 3, MiConstants::LOGFILE);
-        }
     }
     
     public function updateDevice($hg, $sid, $data)
@@ -472,11 +462,11 @@ class MiGateway extends Threaded
         }
         catch (\Homegear\HomegearException $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getCode()." ".$e->getMessage().")");
+            MiLogger::Instance()->exception_log($e);
         }
         catch (Exception $e)
         {
-            $this->debug_log("ERROR ".__FILE__." line ".__LINE__."(".$e->getTraceAsString().")");
+            MiLogger::Instance()->exception_log($e);
         }
         return $success;
     }
