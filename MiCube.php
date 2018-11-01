@@ -37,7 +37,7 @@ class MiCube extends MiBaseDevice
             {
                 $hg->setValue($this->_peerId, 2, 'ROTATE_RIGHT', TRUE);                
             }
-            if (count($args>1))
+            if (count($args)>1)
             {
                 $hg->setValue($this->_peerId, 2, 'TIME', intval($args[1]));
             }
