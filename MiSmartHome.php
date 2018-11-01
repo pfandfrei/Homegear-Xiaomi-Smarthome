@@ -34,79 +34,6 @@ class SharedData extends Threaded
     }
 }
 
-class EventThread extends Thread
-{
-    const LOGFILE = '/var/log/homegear/mihome.log';
-    
-    private $sharedData;
-
-    public function __construct($sharedData)
-    {
-        $this->sharedData = $sharedData;
-    }
-
-    public function run()
-    {
-        $hg = new \Homegear\Homegear();
-        if ($hg->registerThread($this->sharedData->scriptId) === false)
-        {
-            $hg->log('Could not register thread.');
-            return;
-        }
-        
-        $this->sharedData->synchronized(
-            function() use($sharedData, $hg)
-            {            
-                foreach ($sharedData->gateways as $gateway)
-                {
-                    $hg->subscribePeer(intval($gateway->getPeerId()));
-                    foreach ($gateway->getDevicelist() as $sid)
-                    {
-                        if ($device = $gateway->getDevice($sid))
-                        {
-                            $hg->subscribePeer($device->getPeerId());
-                        }
-                    }
-                }
-            }, $this);
-        
-        while (!$hg->shuttingDown())
-        {
-            $result = $hg->pollEvent();
-            if ($result['TYPE'] == 'event')
-            {
-                $this->sharedData->synchronized(
-                    function() use($sharedData, $hg, $result)
-                    {            
-                        foreach ($sharedData->gateways as $gateway)
-                        {
-                            // Pass result to main thread
-                            $gateway->updateEvent($hg, $result);
-                        }
-                    }, $this);
-
-                // Wake up main thread
-                $this->synchronized(function($thread)
-                {
-                    $thread->notify();
-                }, $this);
-            }
-            else if ($result['TYPE'] == 'updateDevice')
-            {
-                $this->sharedData->synchronized(
-                    function() use($sharedData, $hg, $result)
-                    {            
-                        foreach ($sharedData->gateways as $gateway)
-                        {
-                            // Pass result to main thread
-                            $gateway->getParamset($hg, $result['CHANNEL']);
-                        }
-                    }, $this);    
-            }
-        }
-    }
-}
-
 function MiErrorHandler($errno, $errstr, $errfile, $errline) 
 {
     MiLogger::Instance()->error_log($errno.' '.$errstr.' '.$errfile.' '.$errline);
@@ -135,14 +62,64 @@ if ($peerId > 0)
         
         // discover all gateways and devices
         $central->discover();
-        // handle homegear events
-        $thread = new EventThread($sharedData);
-        $thread->start();
         // handle gateway communication
         $central->run();
-        $thread->join();
-        socket_close($sharedData->socket_recv);
         
+        // homegear communication: subscribe peers
+        $this->synchronized(
+            function($sharedData) use($hg)
+            {            
+                foreach ($sharedData->gateways as $gateway)
+                {
+                    $hg->subscribePeer(intval($gateway->getPeerId()));
+                    foreach ($gateway->getDevicelist() as $sid)
+                    {
+                        if ($device = $gateway->getDevice($sid))
+                        {
+                            $hg->subscribePeer($device->getPeerId());
+                        }
+                    }
+                }
+            }, $sharedData);
+        
+        // homegear communication: handle events
+        while (!$hg->shuttingDown())
+        {
+            $result = $hg->pollEvent();
+            if ($result['TYPE'] == 'event')
+            {
+                $this->synchronized(
+                    function() use($sharedData, $hg, $result)
+                    {            
+                        foreach ($sharedData->gateways as $gateway)
+                        {
+                            // Pass result to main thread
+                            $gateway->updateEvent($hg, $result);
+                        }
+                    }, $this);
+
+                // Wake up main thread
+                $this->synchronized(function($thread)
+                {
+                    $thread->notify();
+                }, $this);
+            }
+            else if ($result['TYPE'] == 'updateDevice')
+            {
+                $this->synchronized(
+                    function($sharedData) use( $hg, $result)
+                    {            
+                        foreach ($sharedData->gateways as $gateway)
+                        {
+                            // Pass result to main thread
+                            $gateway->getParamset($hg, $result['CHANNEL']);
+                        }
+                    }, $this);    
+            }
+        }
+        
+        // clean up
+        socket_close($sharedData->socket_recv);        
         set_error_handler($old_error_handler);
     }
 }

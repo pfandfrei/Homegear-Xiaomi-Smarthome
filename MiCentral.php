@@ -162,9 +162,10 @@ class MiCentral extends Threaded
         try
         {
             global $sharedData;
-            $this->_sharedData->synchronized(
+            $result = $this->_sharedData->synchronized(
                 function() use($sharedData, $hg, $sid, $data)
                 {
+                    $result = FALSE;
                     foreach ($sharedData->gateways as $gateway)
                     {
                         if ($gateway->updateDevice($hg, $sid, $data))
@@ -172,6 +173,7 @@ class MiCentral extends Threaded
                             $result = TRUE;
                         }
                     }
+                    return $result;
                 }, $this);
         }
         catch (\Homegear\HomegearException $e)
