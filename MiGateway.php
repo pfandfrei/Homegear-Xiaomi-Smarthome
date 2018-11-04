@@ -28,9 +28,6 @@ class MiGateway extends Threaded
     const HEARTBEAT_TIMEOUT = 10;
     
     const IV = "\x17\x99\x6d\x09\x3d\x28\xdd\xb3\xba\x69\x5a\x2e\x6f\x58\x56\x2e";
-
-    const CMD_GET_ID_LIST = '{"cmd":"get_id_list"}';
-    const ACK_GET_ID_LIST = 'get_id_list_ack';
     
     private $_enable = FALSE;
     private $_rgb = 0;

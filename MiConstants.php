@@ -8,6 +8,7 @@
 class MiConstants
 {
     const LOGFILE = '/var/log/homegear/mihome.log';
+    const ERRFILE = '/var/log/homegear/mihome.err';
     
     const MULTICAST_ADDRESS = '224.0.0.50';
     const MULTICAST_PORT    = 9898;

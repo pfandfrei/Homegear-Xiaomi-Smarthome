@@ -1,5 +1,5 @@
 ## Xiaomi Smart Home - Homegear Interface
-V0.5.1 supports firmware version 1.4.1_157.0143
+V0.6.5 supports firmware version 1.4.1_159.0143
 
 supports Homegear 0.7.x 
 
@@ -32,6 +32,8 @@ All Xiaomi devices have to be added in MiHome app.
 
 # Supported devices (tested)
 
+## more detailed device documentation can be found in the doc folder
+
 **[Xiaomi Mi Smart Home Gateway 2](https://xiaomi-mi.com/mi-smart-home/xiaomi-mi-gateway-2/) (MiGateway)**
 
 - illumination (read): ambient light, values are from 300 to 1300
@@ -40,7 +42,7 @@ All Xiaomi devices have to be added in MiHome app.
 - parameter MUSIC_ID can be used to select preset sound or mp3 uploaded by user (MUSIC_ID >=10001)
 - parameter VOLUME will set the volume for the music to play
 - parameter PLAY will start/stop playing the selected music
-- multiple gateways should be supported but implentation is untested
+- multiple gateways are supported
 
 **[Xiaomi Mi Smart Home Temperature/Humidity Sensor](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mi-temperature-humidity-sensor/) (MiSensorHT)**
 
@@ -91,6 +93,18 @@ All Xiaomi devices have to be added in MiHome app.
 - FREE_FALL is set true if free fall (drop of more than 7cm) is detected. Value is set not more than once a minute
 - TILT is set true if tilt is detected. Value is set not more than once a minute
 
+**[Xiaomi Mi Smart Home Cube](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mi-smart-home-cube-white/) (MiCube)**
+
+- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
+- FLIP90 is set when cube is flipped by one side (90 degrees)
+- FLIP180 is set when cube is flipped by two sides (180 degrees)
+- MOVE is set when cube is moved
+- TAP_TWICE is set when cube is double tapped 
+- SHAKE AIR tbd 
+- SWING tbd
+- ALERT tbd 
+- FREE_FALL tbd
+
 
 ## untested, but should work ##
 **[Xiaomi Aqara Smart Light Control](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-aqara-smart-light-control-set/) (Mi86Sw1/Mi86Sw2)**
@@ -115,18 +129,6 @@ All Xiaomi devices have to be added in MiHome app.
 **[Xiaomi Aqara Water Leak Sensor](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mijia-aqara-water-sensor/) (MiWLeakAq1)**
 
 - LEAK is set to true if water is detected
-
-**[Xiaomi Mi Smart Home Cube](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mi-smart-home-cube-white/) (MiCube)**
-
-- VOLTAGE shows current battery voltage in mV. Values lower than 2800mV indicates a low battery
-- FLIP90 is set when cube is flipped by one side (90 degrees)
-- FLIP180 is set when cube is flipped by two sides (180 degrees)
-- MOVE is set when cube is moved
-- TAP_TWICE is set when cube is double tapped 
-- SHAKE AIR tbd 
-- SWING tbd
-- ALERT tbd 
-- FREE_FALL tbd
 
 **[Xiaomi MiJia Honeywell Smoke Detector](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-mijia-honeywell-smoke-detector-white/) (MiSmoke)**
 
