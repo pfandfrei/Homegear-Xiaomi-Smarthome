@@ -161,20 +161,13 @@ class MiCentral extends Threaded
         $result = FALSE;
         try
         {
-            global $sharedData;
-            $result = $this->_sharedData->synchronized(
-                function() use($sharedData, $hg, $sid, $data)
+            foreach ($this->_sharedData->gateways as $gateway)
+            {
+                if ($gateway->updateDevice($hg, $sid, $data))
                 {
-                    $result = FALSE;
-                    foreach ($sharedData->gateways as $gateway)
-                    {
-                        if ($gateway->updateDevice($hg, $sid, $data))
-                        {
-                            $result = TRUE;
-                        }
-                    }
-                    return $result;
-                }, $this);
+                    $result = TRUE;
+                }
+            }
         }
         catch (\Homegear\HomegearException $e)
         {
@@ -227,21 +220,14 @@ class MiCentral extends Threaded
                         case MiConstants::ACK_READ:
                             if ($response->model == MiConstants::MODEL_GATEWAY)
                             {
-                                global $sharedData;
-                                $log_unknown = !$this->_sharedData->synchronized(
-                                    function() use($sharedData, $hg, $response, $data)
+                                foreach ($this->_sharedData->gateways as $gateway)
+                                {
+                                    if ($gateway->getSid() == $response->sid)
                                     {
-                                        foreach ($sharedData->gateways as $gateway)
-                                        {
-                                            if ($gateway->getSid() == $response->sid)
-                                            {
-                                                $log_unknown = FALSE;
-                                                $gateway->updateData($hg, $response);
-                                                return TRUE;
-                                            }
-                                        }
-                                        return FALSE;
-                                    }, $this);
+                                        $log_unknown = FALSE;
+                                        $gateway->updateData($hg, $response);
+                                    }
+                                }
                                 MiLogger::Instance()->debug_log($json);
                                     
                             }
