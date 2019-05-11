@@ -63,17 +63,17 @@ class MiGenericSocket extends MiBaseDevice
             }
         }
         
-        if (setProperty($data, 'load_voltage'))
+        if ($this->setProperty($data, 'load_voltage'))
         {
             $hg->setValue($this->_peerId, 1, 'LOAD_VOLTAGE', intval($data->load_voltage));
         }
         
-        if (setProperty($data, 'load_power'))
+        if ($this->setProperty($data, 'load_power'))
         {
             $hg->setValue($this->_peerId, 1, 'LOAD_POWER', floatval($data->load_power));
         }
         
-        if (setProperty($data, 'power_consumed'))
+        if ($this->setProperty($data, 'power_consumed'))
         {
             $hg->setValue($this->_peerId, 1, 'POWER_CONSUMED', floatval($data->power_consumed));
         }
