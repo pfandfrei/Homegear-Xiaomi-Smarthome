@@ -84,6 +84,7 @@
             </parameter>
             <parameter id="LOWBAT">
                 <properties>
+                    <service>true</service>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>
                     <unit></unit>
@@ -92,9 +93,9 @@
                     </casts>
                 </properties>
                 <logicalBoolean/>
-                <physicalBoolean>
+                <physicalNone>
                     <operationType>store</operationType>
-                </physicalBoolean>
+                </physicalNone>
             </parameter>
         </variables>
         <variables id="custom_ch1_key">
