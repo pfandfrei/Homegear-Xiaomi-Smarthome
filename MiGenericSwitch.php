@@ -42,6 +42,7 @@ class MiGenericSwitch extends MiBaseDevice
             case MiConstants::MODEL_86SW2:
             case MiConstants::MODEL_SENSOR_86SW2:
             case MiConstants::MODEL_SENSOR_86SW2_AQ1:
+            case MiConstants::MODEL_REMOTE_B286ACN01:
                 $this->_type_id = 0x28d1;
                 $this->_channels = 2;
                 break;
