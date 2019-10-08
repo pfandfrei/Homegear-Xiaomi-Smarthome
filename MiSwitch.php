@@ -17,6 +17,7 @@ class MiSwitch extends MiBaseDevice
         $this->_model = $model;
         switch ($model)
         {
+            case MiConstants::MODEL_SWITCH_V2:
             case MiConstants::MODEL_SWITCH:
                 $this->_type_id = 0x287c;
                 break;
@@ -30,7 +31,7 @@ class MiSwitch extends MiBaseDevice
             default:
                 $this->_model = MiConstants::MODEL_UNKNOWN;
         }
-        parent::__construct($config);              
+        parent::__construct($config);
     }
     
     public function getTypeId() { return $this->_type_id; }
