@@ -23,13 +23,14 @@ class MiMotion extends MiBaseDevice
                 $this->_type_id = 0x287b;
                 break;
             case MiConstants::MODEL_SENSOR_MOTION:
+            case MiConstants::MODEL_SENSOR_MOTION_V2:
             case MiConstants::MODEL_SENSOR_MOTION_AQ2:
                 $this->_type_id = 0x287e;
                 break;
             default:
                 $this->_model = MiConstants::MODEL_UNKNOWN;
         }
-        parent::__construct($config);        
+        parent::__construct($config);
     }
     
     public function getTypeId() { return $this->_type_id; }
@@ -49,7 +50,7 @@ class MiMotion extends MiBaseDevice
         }
         if ($this->setProperty($data, 'lux'))
         {
-            $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->lux); 
+            $hg->setValue($this->_peerId, 1, 'ILLUMINATION', $data->lux);
         }
     }
     

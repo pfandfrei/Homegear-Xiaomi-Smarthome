@@ -25,13 +25,14 @@ class MiMagnet extends MiBaseDevice
                 $this->_type_id = 0x287a;
                 break;
             case MiConstants::MODEL_SENSOR_MAGNET:
+            case MiConstants::MODEL_SENSOR_MAGNET_V2:
             case MiConstants::MODEL_SENSOR_MAGNET_AQ2:
                 $this->_type_id = 0x2879;
                 break;
             default:
                 $this->_model = MiConstants::MODEL_UNKNOWN;
         }
-        parent::__construct($config);        
+        parent::__construct($config);
     }
     
     public function getTypeId() { return $this->_type_id; }
