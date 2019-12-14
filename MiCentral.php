@@ -103,18 +103,10 @@ class MiCentral extends Threaded
         }
     }
 
-    private function encodeSid($sid)
-    {
-        $id = substr('0000000000000000'. $sid, 16);
-        $address = intval(base_convert(substr($id, -16, 8), 16, 10));
-        $serial = 'MI'.strtoupper(substr($id, -8));
-        return [$address, $serial];
-    }
-
     public function createDevices($hg, $gateway)
     {
         // create gateway device
-        list($address, $serial) = $this->encodeSid($gateway->getSid());
+        list($address, $serial) = $gateway->encodeSid($gateway->getSid());
         $peerdIds = $hg->getPeerId(FILTER_SERIAL, $serial);
         if (0 == count($peerdIds))
         {
@@ -135,10 +127,10 @@ class MiCentral extends Threaded
         {
             if ($device = $gateway->getDevice($sid))
             {
-                list($address, $serial) = $this->encodeSid($sid);
+                list($address, $serial) = $gateway->encodeSid($sid);
                 $peerdIds = $hg->getPeerId(FILTER_SERIAL, $serial);
                 if (0 == count($peerdIds))
-                {
+                {                 
                     $peerId = $hg->createDevice(MiCentral::FAMILY_ID, $device->getTypeId(), $serial, intval($address), /*protoversion*/0x0107);
                     if (!$this->_oldversion)
                     {
@@ -247,7 +239,18 @@ class MiCentral extends Threaded
                     }
                     if ($log_unknown)
                     {
-                        MiLogger::Instance()->unknown_log($json);
+                        $peerId = 0;
+                        foreach ($this->_sharedData->gateways as $gateway)
+                        {
+                            if ($peerId = $gateway->createDevice($hg, $response->sid))
+                            {
+                                break;
+                            }
+                        }
+                        if ($peerId == 0)
+                        {
+                            MiLogger::Instance()->unknown_log($json);
+                        }
                     }
                 }
             }

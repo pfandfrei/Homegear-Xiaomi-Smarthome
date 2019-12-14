@@ -1,5 +1,5 @@
 ## Xiaomi Smart Home - Homegear Interface
-V0.6.5 supports firmware version 1.4.1_159.0143
+V0.7.0 supports firmware version 1.4.1_159.0143
 
 supports Homegear 0.7.x 
 

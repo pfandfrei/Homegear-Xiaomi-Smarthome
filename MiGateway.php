@@ -113,16 +113,41 @@ class MiGateway extends Threaded
             $hg->putParamset($this->_peerId, 0, ['PROTO_VERSION' => $this->_proto_version]);
         }
     }
+
+    public function encodeSid($sid)
+    {
+        $id = substr('0000000000000000'. $sid, 16);
+        $address = intval(base_convert(substr($id, -16, 8), 16, 10));
+        $serial = 'MI'.strtoupper(substr($id, -8));
+        return [$address, $serial];
+    }
     
     public function getSid() { return $this->_sid; }
     
     public function getDevicelist() { return $this->_devicelist; }
     
+    public function createDevice($hg, $sid)
+    {
+        $peerId = 0;
+        $this->addDevice($sid);
+        if ($device = $this->getDevice($sid))
+        {
+            list($address, $serial) = $this->encodeSid($sid);
+            $peerId = $hg->createDevice(MiCentral::FAMILY_ID, $device->getTypeId(), $serial, intval($address), /*protoversion*/0x0107);
+            if (!$this->_oldversion)
+            {
+                $hg->putParamset($peerId, 0, ['SID' => $sid]);
+            }
+            $device->setPeerId($peerId);
+        }
+        return $peerId;
+    }
+
     public function getDevice($sid)
     { 
         return array_key_exists($sid, $this->_devices) ? $result = $this->_devices[$sid] : FALSE;
     }
-    
+
     public function getIpAddress()
     {
         return $this->_ip;
@@ -157,81 +182,7 @@ class MiGateway extends Threaded
         {
             foreach(json_decode($response->data) as $deviceid)
             {
-                $this->_devicelist[] = $deviceid;
-                
-                $deviceinfo = $this->readDevice($deviceid);
-                $data = json_decode($deviceinfo->data);
-                switch ($deviceinfo->model)
-                {
-                    case MiConstants::MODEL_GATEWAY:
-                        //$this->updateData($hg, $deviceinfo);
-                        break;
-                    case MiConstants::MODEL_SWITCH:
-                    case MiConstants::MODEL_SWITCH_AQ2:
-                    case MiConstants::MODEL_SWITCH_AQ3:
-                    case MiConstants::MODEL_REMOTE_B1ACN01:
-                        $this->_devices[$deviceid] = new MiSwitch($data, $deviceinfo->model);
-                        break;
-                    case MiConstants::MODEL_SENSOR_HT:
-                    case MiConstants::MODEL_WEATHER_V1:
-                        $this->_devices[$deviceid] = new MiSensorHT($data, $deviceinfo->model);
-                        break;
-                    case MiConstants::MODEL_CUBE:
-                    case MiConstants::MODEL_SENSOR_CUBE:
-                    case MiConstants::MODEL_SENSOR_CUBE_AQGL01:
-                        $this->_devices[$deviceid] = new MiCube($data);
-                        break;
-                    case MiConstants::MODEL_MAGNET:
-                    case MiConstants::MODEL_SENSOR_MAGNET:
-                    case MiConstants::MODEL_SENSOR_MAGNET_AQ2:
-                        $this->_devices[$deviceid] = new MiMagnet($data, $deviceinfo->model);
-                        break;
-                    case MiConstants::MODEL_MOTION:
-                    case MiConstants::MODEL_SENSOR_MOTION:
-                    case MiConstants::MODEL_SENSOR_MOTION_AQ2:
-                        $this->_devices[$deviceid] = new MiMotion($data, $deviceinfo->model);
-                        break;
-                    case MiConstants::MODEL_CTRL_NEUTRAL1:
-                    case MiConstants::MODEL_CTRL_NEUTRAL1_AQ1:
-                    case MiConstants::MODEL_86SW1:
-                    case MiConstants::MODEL_SENSOR_86SW1:
-                    case MiConstants::MODEL_SENSOR_86SW1_AQ1:
-                    case MiConstants::MODEL_REMOTE_B186ACN01:
-                    case MiConstants::MODEL_CTRL_LN1:
-                    case MiConstants::MODEL_CTRL_LN1_AQ1:
-                    case MiConstants::MODEL_CTRL_NEUTRAL2:
-                    case MiConstants::MODEL_CTRL_NEUTRAL2_AQ1:
-                    case MiConstants::MODEL_86SW2:
-                    case MiConstants::MODEL_SENSOR_86SW2:
-                    case MiConstants::MODEL_SENSOR_86SW2_AQ1:
-                    case MiConstants::MODEL_REMOTE_B286ACN01:
-                    case MiConstants::MODEL_CTRL_LN2:
-                    case MiConstants::MODEL_CTRL_LN2_AQ1:
-                        $this->_devices[$deviceid] = new MiGenericSwitch($data, $deviceinfo->model);
-                        break;
-                    case MiConstants::MODEL_SMOKE:
-                    case MiConstants::MODEL_SENSOR_SMOKE:
-                    case MiConstants::MODEL_NATGAS:
-                    case MiConstants::MODEL_SENSOR_NATGAS:
-                        $this->_devices[$deviceid] = new MiGenericAlarm($data, $deviceinfo->model);
-                        break;
-                    case MiConstants::MODEL_PLUG:
-                    case MiConstants::MODEL_86PLUG:
-                    case MiConstants::MODEL_CTRL_86PLUG:
-                    case MiConstants::MODEL_CTRL_86PLUG_AQ1:
-                        $this->_devices[$deviceid] = new MiGenericSocket($data, $deviceinfo->model);
-                        break;
-                    case MiConstants::MODEL_WLEAK_AQ1:
-                        $this->_devices[$deviceid] = new MiWLeakAq1($data);
-                        break;
-                    case MiConstants::MODEL_VIBRATION:
-                    case MiConstants::MODEL_LUMI_VIBRATION_AQ1:
-                        $this->_devices[$deviceid] = new MiVibration($data);
-                        break;
-                    default:
-                        MiLogger::Instance()->unknown_log('unknown device: '.$deviceinfo->model);
-                        break;
-                }
+                $this->addDevice($deviceid);
             }
         }
     }
@@ -260,6 +211,95 @@ class MiGateway extends Threaded
     {
         $cmd = '{"cmd": "read", "sid":"' . $deviceid . '"}';
         return $this->sendCommand($this->_socket, $cmd, $this->_ip, $this->_port, MiConstants::ACK_READ);
+    }
+
+    private function addDevice($deviceid)
+    {
+        $isKnownModel = FALSE;
+        $deviceinfo = $this->readDevice($deviceid);
+        $data = json_decode($deviceinfo->data);        
+        if (!property_exists($data, 'error'))
+        {
+            $isKnownModel = TRUE;
+            switch ($deviceinfo->model)
+            {
+                case MiConstants::MODEL_GATEWAY:
+                    //$this->updateData($hg, $deviceinfo);
+                    break;
+                case MiConstants::MODEL_SWITCH:
+                case MiConstants::MODEL_SWITCH_AQ2:
+                case MiConstants::MODEL_SWITCH_AQ3:
+                case MiConstants::MODEL_REMOTE_B1ACN01:
+                    $this->_devices[$deviceid] = new MiSwitch($data, $deviceinfo->model);
+                    break;
+                case MiConstants::MODEL_SENSOR_HT:
+                case MiConstants::MODEL_WEATHER_V1:
+                    $this->_devices[$deviceid] = new MiSensorHT($data, $deviceinfo->model);
+                    break;
+                case MiConstants::MODEL_CUBE:
+                case MiConstants::MODEL_SENSOR_CUBE:
+                case MiConstants::MODEL_SENSOR_CUBE_AQGL01:
+                    $this->_devices[$deviceid] = new MiCube($data);
+                    break;
+                case MiConstants::MODEL_MAGNET:
+                case MiConstants::MODEL_SENSOR_MAGNET:
+                case MiConstants::MODEL_SENSOR_MAGNET_AQ2:
+                    $this->_devices[$deviceid] = new MiMagnet($data, $deviceinfo->model);
+                    break;
+                case MiConstants::MODEL_MOTION:
+                case MiConstants::MODEL_SENSOR_MOTION:
+                case MiConstants::MODEL_SENSOR_MOTION_AQ2:
+                    $this->_devices[$deviceid] = new MiMotion($data, $deviceinfo->model);
+                    break;
+                case MiConstants::MODEL_CTRL_NEUTRAL1:
+                case MiConstants::MODEL_CTRL_NEUTRAL1_AQ1:
+                case MiConstants::MODEL_86SW1:
+                case MiConstants::MODEL_SENSOR_86SW1:
+                case MiConstants::MODEL_SENSOR_86SW1_AQ1:
+                case MiConstants::MODEL_REMOTE_B186ACN01:
+                case MiConstants::MODEL_CTRL_LN1:
+                case MiConstants::MODEL_CTRL_LN1_AQ1:
+                case MiConstants::MODEL_CTRL_NEUTRAL2:
+                case MiConstants::MODEL_CTRL_NEUTRAL2_AQ1:
+                case MiConstants::MODEL_86SW2:
+                case MiConstants::MODEL_SENSOR_86SW2:
+                case MiConstants::MODEL_SENSOR_86SW2_AQ1:
+//                case MiConstants::MODEL_REMOTE_B286ACN01:
+                case MiConstants::MODEL_CTRL_LN2:
+                case MiConstants::MODEL_CTRL_LN2_AQ1:
+                    $this->_devices[$deviceid] = new MiGenericSwitch($data, $deviceinfo->model);
+                    break;
+                case MiConstants::MODEL_SMOKE:
+                case MiConstants::MODEL_SENSOR_SMOKE:
+                case MiConstants::MODEL_NATGAS:
+                case MiConstants::MODEL_SENSOR_NATGAS:
+                    $this->_devices[$deviceid] = new MiGenericAlarm($data, $deviceinfo->model);
+                    break;
+                case MiConstants::MODEL_PLUG:
+                case MiConstants::MODEL_86PLUG:
+                case MiConstants::MODEL_CTRL_86PLUG:
+                case MiConstants::MODEL_CTRL_86PLUG_AQ1:
+                    $this->_devices[$deviceid] = new MiGenericSocket($data, $deviceinfo->model);
+                    break;
+                case MiConstants::MODEL_WLEAK_AQ1:
+                    $this->_devices[$deviceid] = new MiWLeakAq1($data);
+                    break;
+                case MiConstants::MODEL_VIBRATION:
+                case MiConstants::MODEL_LUMI_VIBRATION_AQ1:
+                    $this->_devices[$deviceid] = new MiVibration($data);
+                    break;
+                default:
+                    MiLogger::Instance()->unknown_log('unknown device: '.$deviceinfo->model);
+                    $isKnownModel = FALSE;
+                    break;
+            }
+
+            if ($isKnownModel)
+            {
+                $this->_devicelist[] = $deviceid;
+            }
+        }
+        return $isKnownModel;
     }
 
     public function setPassword($password)

@@ -69,7 +69,7 @@ class MiGenericSwitch extends MiBaseDevice
         {
             if ($data->dual_channel == 'both_click')
             {
-                $hg->setValue($this->_peerId, $this->_channels+1, 'PRESS_SHORT', TRUE);
+                $hg->setValue($this->_peerId, $this->_channels+1, 'PRESS_BOTH', TRUE);
             }
         }
         else
