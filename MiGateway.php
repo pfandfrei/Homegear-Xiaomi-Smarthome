@@ -264,7 +264,7 @@ class MiGateway extends Threaded
                 case MiConstants::MODEL_86SW2:
                 case MiConstants::MODEL_SENSOR_86SW2:
                 case MiConstants::MODEL_SENSOR_86SW2_AQ1:
-//                case MiConstants::MODEL_REMOTE_B286ACN01:
+                case MiConstants::MODEL_REMOTE_B286ACN01:
                 case MiConstants::MODEL_CTRL_LN2:
                 case MiConstants::MODEL_CTRL_LN2_AQ1:
                     $this->_devices[$deviceid] = new MiGenericSwitch($data, $deviceinfo->model);
