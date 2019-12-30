@@ -204,6 +204,8 @@ class MiCentral extends Threaded
                     {
                         // todo: error handling
                     }
+                           
+                    MiLogger::Instance()->debug_log($json);
                     
                     switch ($response->cmd)
                     {
@@ -220,7 +222,6 @@ class MiCentral extends Threaded
                                         $gateway->updateData($hg, $response);
                                     }
                                 }
-                                MiLogger::Instance()->debug_log($json);
                                     
                             }
                             else
@@ -228,7 +229,6 @@ class MiCentral extends Threaded
                                 if (FALSE !== $this->updateDevice($hg, $response->sid, $data))
                                 {
                                     $log_unknown = FALSE;
-                                    MiLogger::Instance()->debug_log($json);
                                 }
                             }
                             break;
