@@ -35,10 +35,17 @@ final class MiLogger
         error_log($now . ' >>  ' . $message . PHP_EOL, 3, MiConstants::LOGFILE);
     }
     
-    public function error_log($text)
+    public function error_log($text, $model='', $type='')
     {
         $now = strftime('%Y-%m-%d %H:%M:%S');
-        error_log($now . ' [ERROR] ' . $text . PHP_EOL, 3, MiConstants::ERRFILE);
+        if ((strlen($model) > 0) || (strlen($type) > 0))
+        {
+            error_log($now . ' [ERROR] ' . $text . '(' . $model . ' ' . $type . ')' . PHP_EOL, 3, MiConstants::ERRFILE);
+        }
+        else
+        {
+            error_log($now . ' [ERROR] ' . $text . PHP_EOL, 3, MiConstants::ERRFILE);
+        }
     }
     
     public function unknown_log($text)

@@ -43,11 +43,11 @@ abstract class MiBaseDevice extends Threaded
         }
         catch (\Homegear\HomegearException $e)
         {
-            MiLogger::Instance()->exception_log($e);
+            MiLogger::Instance()->exception_log($e, $this->_model, $this->_type);
         }
         catch (Exception $e)
         {
-            MiLogger::Instance()->exception_log($e);
+            MiLogger::Instance()->exception_log($e, $this->_model, $this->_type);
         }
     }
     
