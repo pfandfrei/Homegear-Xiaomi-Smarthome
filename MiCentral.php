@@ -153,13 +153,20 @@ class MiCentral extends Threaded
         $result = FALSE;
         try
         {
-            foreach ($this->_sharedData->gateways as $gateway)
-            {
-                if ($gateway->updateDevice($hg, $sid, $data))
+            global $sharedData;
+            $result = $this->_sharedData->synchronized(
+                function() use($sharedData, $hg, $sid, $data)
                 {
-                    $result = TRUE;
-                }
-            }
+                    $result = FALSE;
+                    foreach ($sharedData->gateways as $gateway)
+                    {
+                        if ($gateway->updateDevice($hg, $sid, $data))
+                        {
+                            $result = TRUE;
+                        }
+                    }
+                    return $result;
+                }, $this);
         }
         catch (\Homegear\HomegearException $e)
         {
@@ -214,15 +221,21 @@ class MiCentral extends Threaded
                         case MiConstants::ACK_READ:
                             if ($response->model == MiConstants::MODEL_GATEWAY)
                             {
-                                foreach ($this->_sharedData->gateways as $gateway)
-                                {
-                                    if ($gateway->getSid() == $response->sid)
+                                global $sharedData;
+                                $log_unknown = !$this->_sharedData->synchronized(
+                                    function() use($sharedData, $hg, $response, $data)
                                     {
-                                        $log_unknown = FALSE;
-                                        $gateway->updateData($hg, $response);
-                                    }
-                                }
-                                    
+                                        foreach ($sharedData->gateways as $gateway)
+                                        {
+                                            if ($gateway->getSid() == $response->sid)
+                                            {
+                                                $log_unknown = FALSE;
+                                                $gateway->updateData($hg, $response);
+                                                return TRUE;
+                                            }
+                                        }
+                                        return FALSE;
+                                    }, $this);                                    
                             }
                             else
                             {
@@ -240,13 +253,18 @@ class MiCentral extends Threaded
                     if ($log_unknown)
                     {
                         $peerId = 0;
-                        foreach ($this->_sharedData->gateways as $gateway)
-                        {
-                            if ($peerId = $gateway->createDevice($hg, $response->sid))
+                        global $sharedData;
+                        $log_unknown = !$this->_sharedData->synchronized(
+                            function() use($sharedData, $hg, $response, $data)
                             {
-                                break;
-                            }
-                        }
+                                foreach ($sharedData->gateways as $gateway)
+                                {
+                                    if ($peerId = $gateway->createDevice($hg, $response->sid))
+                                    {
+                                        break;
+                                    }
+                                }
+                            }, $this);  
                         if ($peerId == 0)
                         {
                             MiLogger::Instance()->unknown_log($json);

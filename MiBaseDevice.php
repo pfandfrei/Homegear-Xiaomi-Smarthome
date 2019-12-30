@@ -32,7 +32,7 @@ abstract class MiBaseDevice extends Threaded
     {
         try
         {
-            // finally update heartbeat timestamp
+            // update heartbeat timestamp
             $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
             if ($this->setProperty($data, 'voltage'))
             {

@@ -49,30 +49,41 @@ class EventThread extends Thread
         {
             $hg->log('Could not register thread.');
             return;
-        }
-        
-            foreach ($this->sharedData->gateways as $gateway)
-            {
-                $hg->subscribePeer(intval($gateway->getPeerId()));
-                foreach ($gateway->getDevicelist() as $sid)
+        }       
+            
+        // homegear communication: subscribe peers
+        $this->synchronized(
+            function($sharedData) use($hg)
+            {            
+                foreach ($sharedData->gateways as $gateway)
                 {
-                    if ($device = $gateway->getDevice($sid))
+                    $hg->subscribePeer(intval($gateway->getPeerId()));
+                    foreach ($gateway->getDevicelist() as $sid)
                     {
-                        $hg->subscribePeer($device->getPeerId());
+                        if ($device = $gateway->getDevice($sid))
+                        {
+                            $hg->subscribePeer($device->getPeerId());
+                        }
                     }
                 }
-            }
+            }, $sharedData);
+        
         
         while (!$hg->shuttingDown())
         {
             $result = $hg->pollEvent();
             if ($result['TYPE'] == 'event')
-            {
-                for ($i = 0; $i < count($this->sharedData->gateways); $i++)
-                {
-                    // Pass result to main thread
-                    $this->sharedData->gateways[$i]->updateEvent($hg, $result);
-                }
+            {                
+                $this->synchronized(
+                    function() use($sharedData, $hg, $result)
+                    {            
+                        foreach ($sharedData->gateways as $gateway)
+                        {
+                            // Pass result to main thread
+                            $gateway->updateEvent($hg, $result);
+                        }
+                    }, $this);
+                    
                 // Wake up main thread
                 $this->synchronized(function($thread)
                 {
@@ -81,11 +92,15 @@ class EventThread extends Thread
             }
             else if ($result['TYPE'] == 'updateDevice')
             {
-                for ($i = 0; $i < count($this->sharedData->gateways); $i++)
-                {
-                    // Pass result to main thread
-                    $this->sharedData->gateways[$i]->getParamset($hg, $result['CHANNEL']);
-                }    
+                $this->synchronized(
+                    function($sharedData) use( $hg, $result)
+                    {            
+                        foreach ($sharedData->gateways as $gateway)
+                        {
+                            // Pass result to main thread
+                            $gateway->getParamset($hg, $result['CHANNEL']);
+                        }
+                    }, $this);    
             }
         }
     }

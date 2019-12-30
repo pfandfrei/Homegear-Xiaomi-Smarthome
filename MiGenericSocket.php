@@ -45,7 +45,10 @@ class MiGenericSocket extends MiBaseDevice
     
     public function updateData($hg, $data)
     {
-        parent::updateData($hg, $data);
+        //parent::updateData($hg, $data);
+        
+        // update heartbeat timestamp
+        $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
         
         if (property_exists($data, 'status'))
         {
