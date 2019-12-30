@@ -32,18 +32,18 @@ abstract class MiBaseDevice extends Threaded
     {
         try
         {
+            // finally update heartbeat timestamp
+            $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
             if ($this->setProperty($data, 'voltage'))
             {
                 $this->_voltage = intval($data->voltage);
                 $hg->setValue($this->_peerId, 0, 'VOLTAGE', $this->_voltage);  
                 $hg->setValue($this->_peerId, 0, 'LOWBAT', $this->_voltage<2800);   
             }
-            // finally update heartbeat timestamp
-            $hg->setValue($this->_peerId, 0, 'HEARTBEAT', time()); 
         }
         catch (\Homegear\HomegearException $e)
         {
-            MiLogger::Instance()->exception_log($e, $this->_model, $this->_type);
+            MiLogger::Instance()->exception_log($e, $this->_model);
         }
         catch (Exception $e)
         {
