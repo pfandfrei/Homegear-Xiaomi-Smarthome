@@ -52,6 +52,7 @@ class EventThread extends Thread
         }       
             
         // homegear communication: subscribe peers
+        global $sharedData;
         $this->synchronized(
             function($sharedData) use($hg)
             {            
@@ -73,7 +74,8 @@ class EventThread extends Thread
         {
             $result = $hg->pollEvent();
             if ($result['TYPE'] == 'event')
-            {                
+            {            
+                global $sharedData;    
                 $this->synchronized(
                     function() use($sharedData, $hg, $result)
                     {            
@@ -92,6 +94,7 @@ class EventThread extends Thread
             }
             else if ($result['TYPE'] == 'updateDevice')
             {
+                global $sharedData;
                 $this->synchronized(
                     function($sharedData) use( $hg, $result)
                     {            
