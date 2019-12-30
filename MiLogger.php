@@ -35,12 +35,12 @@ final class MiLogger
         error_log($now . ' >>  ' . $message . PHP_EOL, 3, MiConstants::LOGFILE);
     }
     
-    public function error_log($text, $model='', $type='')
+    public function error_log($text, $model='')
     {
         $now = strftime('%Y-%m-%d %H:%M:%S');
-        if ((strlen($model) > 0) || (strlen($type) > 0))
+        if (strlen($model) > 0)
         {
-            error_log($now . ' [ERROR] ' . $text . '(' . $model . ' ' . $type . ')' . PHP_EOL, 3, MiConstants::ERRFILE);
+            error_log($now . ' [ERROR] ' . $text . '(' . $model . ')' . PHP_EOL, 3, MiConstants::ERRFILE);
         }
         else
         {
@@ -54,19 +54,19 @@ final class MiLogger
         error_log($now . ' [UNKNOWN] ' . $text . PHP_EOL, 3, MiConstants::ERRFILE);
     }
     
-    public function exception_log($e, $model='', $type='')
+    public function exception_log($e, $model='')
     {
         $now = strftime('%Y-%m-%d %H:%M:%S');
-        if ((strlen($model) > 0) || (strlen($type) > 0))
+        if (strlen($model) > 0)
         {
             error_log($now . ' [EXCEPTION] '.$e->getFile().' line '.$e->getLine().'('.$e->getCode()." ".$e->getMessage()
-                . '|' .$model . ' ' . $type. ')' . PHP_EOL, 3, MiConstants::ERRFILE);
+                . ' | ' . $model . ')' . PHP_EOL, 3, MiConstants::ERRFILE);
         }
         else
         {
             error_log($now . ' [EXCEPTION] '.$e->getFile().' line '.$e->getLine().'('.$e->getCode()." ".$e->getMessage().')' . PHP_EOL, 3, MiConstants::ERRFILE);
         }
-        error_log($e->getTraceAsString());
+        error_log($e->getTraceAsString() . PHP_EOL, 3, MiConstants::ERRFILE);
     }
 }
 
