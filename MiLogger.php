@@ -54,10 +54,19 @@ final class MiLogger
         error_log($now . ' [UNKNOWN] ' . $text . PHP_EOL, 3, MiConstants::ERRFILE);
     }
     
-    public function exception_log($e)
+    public function exception_log($e, $model='', $type='')
     {
         $now = strftime('%Y-%m-%d %H:%M:%S');
-        error_log($now . ' [EXCEPTION] '.$e->getFile().' line '.$e->getLine().'('.$e->getCode()." ".$e->getMessage().')' . PHP_EOL, 3, MiConstants::ERRFILE);
+        if ((strlen($model) > 0) || (strlen($type) > 0))
+        {
+            error_log($now . ' [EXCEPTION] '.$e->getFile().' line '.$e->getLine().'('.$e->getCode()." ".$e->getMessage()
+                . '|' .$model . ' ' . $type. ')' . PHP_EOL, 3, MiConstants::ERRFILE);
+        }
+        else
+        {
+            error_log($now . ' [EXCEPTION] '.$e->getFile().' line '.$e->getLine().'('.$e->getCode()." ".$e->getMessage().')' . PHP_EOL, 3, MiConstants::ERRFILE);
+        }
+        error_log($e->getTraceAsString());
     }
 }
 

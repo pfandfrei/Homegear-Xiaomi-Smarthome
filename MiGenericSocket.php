@@ -38,7 +38,7 @@ class MiGenericSocket extends MiBaseDevice
                 break;
         }
         
-        parent::__construct($config);        
+        //parent::__construct($config);        
     }
     
     public function getTypeId() { return $this->_type_id; }
