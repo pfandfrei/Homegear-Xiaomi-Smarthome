@@ -10,6 +10,8 @@ class MiConstants
     const LOGFILE = '/var/log/homegear/mihome.log';
     const ERRFILE = '/var/log/homegear/mihome.err';
     
+    const DISCOVER_TIMEOUT  = 5;
+    
     const MULTICAST_ADDRESS = '224.0.0.50';
     const MULTICAST_PORT    = 9898;
     const SERVER_PORT       = 4321;

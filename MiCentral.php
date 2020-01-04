@@ -50,7 +50,7 @@ class MiCentral extends Threaded
 
         $socket = socket_create(AF_INET, SOCK_DGRAM, 0);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, true);
-        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => '0'));
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => MiConstants::DISCOVER_TIMEOUT, 'usec' => '0'));
         socket_sendto($socket, MiConstants::CMD_WHOIS, strlen(MiConstants::CMD_WHOIS), 0, MiConstants::MULTICAST_ADDRESS, MiConstants::SERVER_PORT);
         MiLogger::Instance()->debug_log(MiConstants::CMD_WHOIS);
         do
@@ -235,7 +235,31 @@ class MiCentral extends Threaded
                                             }
                                         }
                                         return FALSE;
-                                    }, $this);                                    
+                                    }, $this);    
+                                    
+                                if ($log_unknown)
+                                {
+                                    // this gateway is not discovered yet                                     
+                                    global $sharedData;
+                                    $log_unknown = $this->_sharedData->synchronized(
+                                        function() use($sharedData, $hg, $response)
+                                        {
+                                            $log_unknown = TRUE;
+                                            // add the new gateway
+                                            $sharedData->gateways[] = new MiGateway($response);                                        
+                                            foreach ($sharedData->gateways as $gateway)
+                                            {
+                                                if ($gateway->getSid() == $response->sid)
+                                                {
+                                                    // read devices from gateway
+                                                    $log_unknown = FALSE;
+                                                    $gateway->get_id_list($hg);
+                                                    $this->createDevices($hg, $gateway);
+                                                }
+                                            }
+                                            return $log_unknown;
+                                        }, $this);
+                                }
                             }
                             else
                             {

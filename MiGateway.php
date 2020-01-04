@@ -44,7 +44,7 @@ class MiGateway extends Threaded
 
     private $_ip;
     private $_token;
-    private $_port;
+    private $_port = 9898;
     private $_socket;
     private $_devicelist;
     private $_devices;
@@ -54,10 +54,14 @@ class MiGateway extends Threaded
         $this->_model = MiConstants::MODEL_GATEWAY;
         if (null != $config)
         {
-            $this->_ip = $config->ip;
-            $this->_port = intval($config->port);
-            $this->_sid = $config->sid;
-            $this->_token = '';
+            if (!$this->setProperty($config, 'ip'))
+            {
+                $data = json_decode($config->data);
+                $this->setProperty($data, 'ip');
+            }
+            $this->setProperty($config, 'port');
+            $this->setProperty($config, 'sid');
+            $this->setProperty($config, 'token');
 
             $this->_devicelist = new StackableArray();
             $this->_devices = new StackableArray();
