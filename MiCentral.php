@@ -113,7 +113,7 @@ class MiCentral extends Threaded
             $peerId = $hg->createDevice(MiCentral::FAMILY_ID, MiGateway::TYPE_ID, $serial, intval($address), /*protoversion*/0x0107);
             if (!$this->_oldversion)
             {
-                $hg->putParamset($peerId, 0, ['SID'=> $gateway->getSid(), 'IP' => $gateway->getIpAddress(), 'PORT' => 9898]);
+                $hg->putParamset($peerId, 0, ['SID'=> $gateway->getSid(), 'IP' => $gateway->getIpAddress(), 'PORT' => MiConstants::MULTICAST_PORT]);
             }
             $gateway->setPeerId($peerId);
         }
@@ -186,7 +186,7 @@ class MiCentral extends Threaded
             die("$errstr ($errno)");
         }
         $res = socket_set_option($this->_socket, IPPROTO_IP, MCAST_JOIN_GROUP, array('group' => MiConstants::MULTICAST_ADDRESS, 'interface' => 0));
-        $res = @socket_bind($this->_socket, '0.0.0.0', 9898);
+        $res = @socket_bind($this->_socket, '0.0.0.0', MiConstants::MULTICAST_PORT);
         return ($res===FALSE) ? FALSE : $this->_socket;
     }
 

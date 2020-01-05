@@ -44,7 +44,7 @@ class MiGateway extends Threaded
 
     private $_ip;
     private $_token;
-    private $_port = 9898;
+    private $_port = MiConstants::MULTICAST_PORT;
     private $_socket;
     private $_devicelist;
     private $_devices;
