@@ -34,7 +34,8 @@ class MiConstants
     const MODEL_GATEWAY             = 'gateway';                    // 0x286c
     const MODEL_VIBRATION           = 'vibration';                  // 0x2877
     const MODEL_LUMI_VIBRATION_AQ1  = 'lumi.vibration.aq1';         // 0x2877
-    const MODEL_SWITCH_AQ3          = 'lumi.sensor_switch.aq3';     // 0x2878
+    const MODEL_LUMI_SWITCH_AQ3     = 'lumi.sensor_switch.aq3';     // 0x2878
+    const MODEL_SWITCH_AQ3          = 'sensor_switch.aq3';          // 0x2878
     const MODEL_SENSOR_MAGNET       = 'sensor_magnet';              // 0x2879
     const MODEL_SENSOR_MAGNET_V2    = 'sensor_magnet.v2';           // 0x2879
     const MODEL_SENSOR_MAGNET_AQ2   = 'sensor_magnet.aq2';          // 0x2879
